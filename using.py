@@ -22,7 +22,7 @@ HYPERLANES = ["83A", "83B", "84A", "84B", "85A", "85B", "86A", "86B", "87A", "87
 # 11, 4
 # 14, 5
 WIDTH = 14
-HEIHGT = 5
+HEIGHT = 5
 
 ADJACENCY_DATA = {
     "0": [1, 2, 3, 4, 5, 6],
