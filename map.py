@@ -1,15 +1,15 @@
 from system import *
 from planets import *
-import numpy
+import numpy as np
 from using import *
 from systems_and_planets import *
 from typing import *
-
+np.set_printoptions(threshold=np.inf)
 class Map():
     def __init__(self):
         # Map 
-        self.map = 0
-        self.tiles = 0
+        self.map = []
+        self.tiles = []
 
     def generate_map(self, map_string: str) -> None:
         """
@@ -19,7 +19,7 @@ class Map():
         # and not included in map string
         map_string = "18 " + map_string
         map_string = map_string.split(' ')
-        print(map_string)
+        
         size = len(map_string)
 
         # index of wormholes in self.tiles
@@ -27,7 +27,7 @@ class Map():
         beta_wormhole_pos =[]
         
         
-        self.map = numpy.zeros((size, size))
+        self.map = np.zeros((size, size))
         self.tiles = []
         # index represent position on board
         # number at index represent TI tile id
@@ -79,8 +79,8 @@ class Map():
     def print_map(self, width: int, height:int):
         """
         Print out map as ascii hexagons
-        width (int): number of _ characters
-        height (int): how many / and \ make up the sides
+        width (int): length of top and bottom face in _ characters
+        height (int): how many lines make up 1 of the side faces
         """
         # Convert adjacency map into grid based map
         # self.tiles stores tile position as its index
@@ -90,15 +90,31 @@ class Map():
         # index 7-18 is radius 2 circle
         # index 19-36 is radius 3 circle
         # r*6 is number of hexagons in each concentric ring
-        filled = numpy.ones((9*2, 9))
-        for i in range(18):
-            for u in range(9):
-                if i + u <= 4:
-                    filled[i][u] = 0
-
+        filled = np.zeros((9*2, 9))
+        filled[8][4] = 1
+        filled[9][4] = 1
+        DIRECTIONS = [(1, 1), (2, 0), (1, -1), (-1, -1), (-2, 0), (-1, 1)]
         
-        hexagon = []
-        #hexagon.append('_' * width)
+        # start from index 1 tile above center at top hexagon
+        y = 6
+        x = 4
+        stay = 1
+        offset = 0
+        for i in range(len(self.tiles)-1):
+            if i == offset + 6*stay:
+                offset = i
+                stay += 1
+                y += -2
+
+            if self.tiles[min(i+1, len(self.tiles)-1)] != 0:
+                filled[y][x] = int(self.tiles[min(i+1, len(self.tiles)-1)].get_TI_id())
+                filled[y+1][x] = int(self.tiles[min(i+1, len(self.tiles)-1)].get_TI_id())
+            x += DIRECTIONS[((i-offset) // stay) % 6][1]
+            y += DIRECTIONS[((i-offset) // stay) % 6][0]
+
+        # Create list containing base hexagon shape
+        # each line corresponds to part of the shape
+        hexagon = []    
         for i in range(height):
             hexagon.append('/' + ' ' * (width+i*2))
 
@@ -107,23 +123,42 @@ class Map():
             
         hexagon.append('\\' + '_' * width)
         hexagon_end = ['\\', '\\', '\\', '/', '/', '/']
+
+        # Print the top of the first line of hexagons
         output = ''
         for w in range(len(filled[0])):
-            if filled[0][w] and w % 2 != 0:
+            if filled[0][w] and w % 2 == 0:
                 output += ' ' * height + '_' * width
             else:
                 output += ' ' * (height+width)
         print(output)
+
+        # Imagining the hexagonal grid as instead a grid of half hexagons
+        # that alternate up and down along x and y axis
+        # max board size is 9x9 hexagons, so grid is 18x9 since we split hexagons
+        # horizontally
+
+        # Grid is 0,0 at top left corner and max, max at bottom right
         for h in range(9*2):
+            # The lines making up half a hexagon = height
             for line in range(height):
                 output = ''
+                # Hexagon segmenets do not have padding spaces
+                # so each line the first time we print a segement 
+                # we need to add spaces, how many depends on current hexagon
+                # orientation
                 first_fill = 1
+
+                # Segements assume the right most piece will be filled by another
+                # segement. Since final segement will not have another piece to
+                # the right we need to add it later. Orientation of piece will
+                # depend on current hexagon orientation
                 final_w = -1
                 
                 for w in range(9):
                     if filled[h][w]:
                         final_w = w
-                        if (w+h) % 2 == 0:
+                        if (w+h) % 2 != 0:
                             # Hex Bottom
                             output += ' ' * line * first_fill + hexagon[height+line]
                             first_fill = 0
@@ -134,27 +169,41 @@ class Map():
                             first_fill = 0
                         
                     else:
-                        if line == 2 and final_w == -1 and filled[h+1][w]:
-                            final_w = w
-                            output += ' ' * height + '_' * width
-                        else:
-                            output += ' ' * (height+width)
+                        if final_w == -1:
+                            if line == height-1 and filled[min(h+1, 17)][w]:
+                                output += ' ' * height + '_' * width
+                            else:
+                                output += ' ' * (height+width)
+                                
+                        elif final_w + 1 == w:
+                            if (w+h) % 2 != 0:
+                                # Hex Bottom
+                                if filled[min(h+1, 17)][w] or line < height-1:
+                                    output += hexagon[height+line]
+                                else:
+                                    output += '\\' + ' '*width
+                            else:
+                                # Hex Top
+                                output += ' ' * (height-1-line) * first_fill + hexagon[line]
+                                
+                        elif line == height-1 and filled[min(h+1,17)][w]:
+                            output += ' ' + '_'*width
+                            final_w = -2
+                                
 
-
-                    if w == 8 and final_w != -1:
-                        if (final_w+h) % 2 == 0:
+                    if w == 8 and final_w == 8:
+                        if final_w == -2:
+                            continue
+                        if (final_w+h) % 2 != 0:
                             # Hex Bottom
                             output += '/'
     
                         else:
                             # Hex Top
                             output += '\\'
-                    
-                        
 
-                    
-                print(output) 
-            
+
+                print(output)         
             
 
     def get_map(self):
@@ -174,19 +223,16 @@ class Map():
 
 maps = Map()
 #https://keeganw.github.io/ti4
-##map_input = input("Enter map string: ")
-##maps.generate_map(map_input)
-##print(maps.get_map())
-##print(maps.get_tiles())
-maps.print_map(8, 3)
-def hexagon_sizes():
-    for u in range(1, 10):
-        for i in range(1, 20):
-            ratio = (u*2*2)/(i+u*2)
-            if ratio == 0.8:
-                print(i,u)
-                print(ratio)
-                maps.print_map(i, u)
+map_input = input("Enter map string: ")
+maps.generate_map(map_input)
+
+maps.print_map(14, 5)
+# 2, 1
+# 5, 2
+# 8, 3
+# 11, 4
+# 14, 5
+
 
 """    __
     __/ff\__             

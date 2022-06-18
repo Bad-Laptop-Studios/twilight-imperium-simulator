@@ -9,7 +9,7 @@ class System():
         Creates a system using its TI_id using data found in systems_and_planets.py
         """
         system_data = SYSTEMS[TI_id]
-        
+        self.TI_id = TI_id
         self.id = id
         self.wormholes = system_data["wormhole"]
         
@@ -64,6 +64,8 @@ class System():
     #Return Functions
     def get_id(self) -> int:
         return self.id
+    def get_TI_id(self) -> str:
+        return self.TI_id
     def get_name(self) -> str:
         return self.name
     def get_anomalies(self) -> List[str]:
