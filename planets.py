@@ -1,17 +1,19 @@
 from typing import List
 from factions import *
-
+from systems_and_planets import *
 class Planet():
-    def __init__(self, name):
-        self._name = name
-        self._resource = None
-        self._influence = None
-        self._flavour_text = None
+    def __init__(self, TI_id, num):
+        planet_data = SYSTEMS[TI_id]["planets"][num]
+        self._name = planet_data["name"]
+        self._resource = planet_data["resources"]
+        self._influence = planet_data["influence"]
+        self._flavour_text = "Flavour Text"
         self._faction = None
-        self._type = []
-        self._technology_specialty = []
+        self._type = planet_data["trait"]
+        self._technology_specialty = planet_data["specialty"]
         self._attachement = None
         self._is_exhausted = False
+        self._legendary = planet_data["legendary"]
 
         # planet types - a planet can be all three at once
         # self._cultural = False

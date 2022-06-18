@@ -1,15 +1,28 @@
 from typing import *
 from planets import *
+from systems_and_planets import *
+class System():
+    def __init__(self, TI_id: str, id: int) -> None:
+        """
+        self, id: int, name: str, anomalies: List[str], planets: List[Planet], wormholes: List[str], token: bool)
 
-class system():
-    def __init__(self, id: int, name: str, anomalies: List[str], planets: List[Planet], wormholes: List[str], token: bool) -> None:
+        Creates a system using its TI_id using data found in systems_and_planets.py
+        """
+        system_data = SYSTEMS[TI_id]
+        
         self.id = id
-        self.name = name
-        self.anomalies = anomalies
-        self.planets = planets
-        self.wormholes = wormholes
-        self.has_frontier_token = token
+        self.wormholes = system_data["wormhole"]
+        
+        self.planets = []
+        for i in range(len(system_data["planets"])):
+            self.planets.append(Planet(TI_id, i))
+
         self.activated = []
+        
+        #self.name = name
+        #self.anomalies = anomalies
+        #self.has_frontier_token = token
+        
 
     def become_nova(self) -> Tuple[List[Planet], List[str]]:
         """Turn system into Muaat Supernova."""
