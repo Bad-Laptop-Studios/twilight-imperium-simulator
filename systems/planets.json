@@ -1,0 +1,785 @@
+[
+    {
+        "name": "Jord",
+        "resources": 4,
+        "influence": 2,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Moll Primus",
+        "resources": 4,
+        "influence": 1,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Darien",
+        "resources": 4,
+        "influence": 4,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Muaat",
+        "resources": 4,
+        "influence": 1,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Nestphar",
+        "resources": 3,
+        "influence": 2,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "[0.0.0]",
+        "resources": 5,
+        "influence": 0,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Winnu",
+        "resources": 3,
+        "influence": 4,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Mordai II",
+        "resources": 4,
+        "influence": 0,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Maaluuk",
+        "resources": 2,
+        "influence": 0,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Druaa",
+        "resources": 3,
+        "influence": 1,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Arc Prime",
+        "resources": 4,
+        "influence": 0,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Wren Terra",
+        "resources": 2,
+        "influence": 1,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Lisis II",
+        "resources": 1,
+        "influence": 0,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Ragh",
+        "resources": 2,
+        "influence": 1,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Nar",
+        "resources": 2,
+        "influence": 3,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Jol",
+        "resources": 1,
+        "influence": 2,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Tren'lak",
+        "resources": 1,
+        "influence": 0,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Quinarra",
+        "resources": 3,
+        "influence": 1,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Archon Ren",
+        "resources": 2,
+        "influence": 3,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Archon Tau",
+        "resources": 1,
+        "influence": 1,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Retillion",
+        "resources": 2,
+        "influence": 3,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Shalloq",
+        "resources": 1,
+        "influence": 2,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Arretze",
+        "resources": 2,
+        "influence": 0,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Hercant",
+        "resources": 1,
+        "influence": 1,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Kamdorn",
+        "resources": 0,
+        "influence": 1,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Mecatol Rex",
+        "resources": 1,
+        "influence": 6,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Wellon",
+        "resources": 1,
+        "influence": 2,
+        "trait": "industrial",
+        "specialty": "cybernetic",
+        "legendary": false
+    },
+    {
+        "name": "Vefut II",
+        "resources": 2,
+        "influence": 2,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Thibah",
+        "resources": 1,
+        "influence": 1,
+        "trait": "industrial",
+        "specialty": "propulsion",
+        "legendary": false
+    },
+    {
+        "name": "Tar'mann",
+        "resources": 1,
+        "influence": 1,
+        "trait": "industrial",
+        "specialty": "biotic",
+        "legendary": false
+    },
+    {
+        "name": "Saudor",
+        "resources": 2,
+        "influence": 2,
+        "trait": "industrial",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Mehar Xull",
+        "resources": 1,
+        "influence": 3,
+        "trait": "hazardous",
+        "specialty": "warfare",
+        "legendary": false
+    },
+    {
+        "name": "Quann",
+        "resources": 2,
+        "influence": 1,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Lodor",
+        "resources": 3,
+        "influence": 1,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "New Albion",
+        "resources": 1,
+        "influence": 1,
+        "trait": "industrial",
+        "specialty": "biotic",
+        "legendary": false
+    },
+    {
+        "name": "Starpoint",
+        "resources": 3,
+        "influence": 1,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Tequ'ran",
+        "resources": 2,
+        "influence": 0,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Torkan",
+        "resources": 0,
+        "influence": 3,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Qucen'n",
+        "resources": 1,
+        "influence": 2,
+        "trait": "industrial",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Rarron",
+        "resources": 0,
+        "influence": 3,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Mellon",
+        "resources": 0,
+        "influence": 2,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Zohbat",
+        "resources": 3,
+        "influence": 1,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Lazar",
+        "resources": 1,
+        "influence": 0,
+        "trait": "industrial",
+        "specialty": "cybernetic",
+        "legendary": false
+    },
+    {
+        "name": "Sakulag",
+        "resources": 2,
+        "influence": 1,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Dal Bootha",
+        "resources": 0,
+        "influence": 2,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Xxehan",
+        "resources": 1,
+        "influence": 1,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Corneeq",
+        "resources": 1,
+        "influence": 2,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Resulon",
+        "resources": 2,
+        "influence": 0,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Centauri",
+        "resources": 1,
+        "influence": 3,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Gral",
+        "resources": 1,
+        "influence": 1,
+        "trait": "industrial",
+        "specialty": "propulsion",
+        "legendary": false
+    },
+    {
+        "name": "Bereg",
+        "resources": 3,
+        "influence": 1,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Lirta IV",
+        "resources": 2,
+        "influence": 3,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Arnor",
+        "resources": 2,
+        "influence": 1,
+        "trait": "industrial",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Lor",
+        "resources": 1,
+        "influence": 2,
+        "trait": "industrial",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Arinam",
+        "resources": 1,
+        "influence": 2,
+        "trait": "industrial",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Meer",
+        "resources": 0,
+        "influence": 4,
+        "trait": "hazardous",
+        "specialty": "warfare",
+        "legendary": false
+    },
+    {
+        "name": "Abyz",
+        "resources": 3,
+        "influence": 0,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Fria",
+        "resources": 2,
+        "influence": 0,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Creuss",
+        "resources": 4,
+        "influence": 2,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Ixth",
+        "resources": 3,
+        "influence": 5,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Arcturus",
+        "resources": 4,
+        "influence": 4,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Acheron",
+        "resources": 4,
+        "influence": 0,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Elysium",
+        "resources": 4,
+        "influence": 1,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "The Dark",
+        "resources": 3,
+        "influence": 4,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Naazir",
+        "resources": 2,
+        "influence": 1,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Rokha",
+        "resources": 1,
+        "influence": 2,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Valk",
+        "resources": 2,
+        "influence": 0,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Avar",
+        "resources": 1,
+        "influence": 1,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Ylir",
+        "resources": 0,
+        "influence": 2,
+        "trait": null,
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Archon Vail",
+        "resources": 1,
+        "influence": 3,
+        "trait": "hazardous",
+        "specialty": "propulsion",
+        "legendary": false
+    },
+    {
+        "name": "Perimeter",
+        "resources": 2,
+        "influence": 1,
+        "trait": "industrial",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Perimeter",
+        "resources": 2,
+        "influence": 0,
+        "trait": "industrial",
+        "specialty": "warfare",
+        "legendary": false
+    },
+    {
+        "name": "Sem-Lore",
+        "resources": 3,
+        "influence": 2,
+        "trait": "cultural",
+        "specialty": "cybernetic",
+        "legendary": false
+    },
+    {
+        "name": "Vorhal",
+        "resources": 0,
+        "influence": 2,
+        "trait": "cultural",
+        "specialty": "biotic",
+        "legendary": false
+    },
+    {
+        "name": "Atlas",
+        "resources": 3,
+        "influence": 1,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Primor",
+        "resources": 2,
+        "influence": 1,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": true
+    },
+    {
+        "name": "Hope's End",
+        "resources": 3,
+        "influence": 0,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": true
+    },
+    {
+        "name": "Cormund",
+        "resources": 2,
+        "influence": 0,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Everra",
+        "resources": 3,
+        "influence": 1,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Accoen",
+        "resources": 2,
+        "influence": 3,
+        "trait": "industrial",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Jeol Ir",
+        "resources": 2,
+        "influence": 3,
+        "trait": "industrial",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Kraag",
+        "resources": 2,
+        "influence": 1,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Siig",
+        "resources": 0,
+        "influence": 2,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Ba'Kal",
+        "resources": 3,
+        "influence": 2,
+        "trait": "industrial",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Alio Prima",
+        "resources": 1,
+        "influence": 1,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Lisis",
+        "resources": 2,
+        "influence": 2,
+        "trait": "industrial",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Velnor",
+        "resources": 2,
+        "influence": 1,
+        "trait": "industrial",
+        "specialty": "warfare",
+        "legendary": false
+    },
+    {
+        "name": "Lisis",
+        "resources": 0,
+        "influence": 2,
+        "trait": "cultural",
+        "specialty": "cybernetic",
+        "legendary": false
+    },
+    {
+        "name": "Xanhact",
+        "resources": 0,
+        "influence": 1,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Vega Major",
+        "resources": 2,
+        "influence": 1,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Vega Minor",
+        "resources": 1,
+        "influence": 2,
+        "trait": "cultural",
+        "specialty": "propulsion",
+        "legendary": false
+    },
+    {
+        "name": "Loki",
+        "resources": 1,
+        "influence": 2,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Abaddon",
+        "resources": 1,
+        "influence": 0,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Ashtroth",
+        "resources": 2,
+        "influence": 0,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Rigel I",
+        "resources": 0,
+        "influence": 1,
+        "trait": "hazardous",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Rigel II",
+        "resources": 1,
+        "influence": 2,
+        "trait": "industrial",
+        "specialty": null,
+        "legendary": false
+    },
+    {
+        "name": "Rigel III",
+        "resources": 1,
+        "influence": 1,
+        "trait": "industrial",
+        "specialty": "biotic",
+        "legendary": false
+    },
+    {
+        "name": "Mallice",
+        "resources": 0,
+        "influence": 3,
+        "trait": "cultural",
+        "specialty": null,
+        "legendary": true
+    }
+]
