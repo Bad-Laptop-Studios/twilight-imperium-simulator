@@ -10,7 +10,7 @@ class Tile():
         self.wormholes = wormholes
         self.has_frontier_token = token
 
-    def become_nova(self) -> None:
+    def become_nova(self) -> Tuple[List[Planet], List[str]]:
         '''Turn tile into Muaat Supernova'''
         self.name = 'Muaat Supernova'
         self.anomalies = 'supernova'
