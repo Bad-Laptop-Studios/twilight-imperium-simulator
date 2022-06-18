@@ -1,3 +1,5 @@
+from typing import *
+
 class Player:
     """
     Stores token pools, units, owned planets
@@ -16,14 +18,13 @@ class Player:
         self.activated_systems = []
 
         self.id = id
+        self._unit_upgrades = []
 
     def select_strategy_card(self, card_number):
         self.strategy_card = card_number
 
     def deactivate_systems(self):
-        """
-        Remove all activated systems
-        """
+        """ Remove all activated systems. """
         self.activated_systems = []
 
     def get_id(self) -> int:
@@ -51,3 +52,8 @@ class Player:
     def get_strategy_tokens(self) -> int:
         """ Returns the number of command tokens in the player's strategy pool. """
         return self._strategy_tokens
+
+    def get_unit_upgrades(self) -> List[str]:
+        """ Returns a list of all the units that are upgraded.
+            Note that unlocking Warsuns is treated as an upgrade. """
+        return self._unit_upgrades
