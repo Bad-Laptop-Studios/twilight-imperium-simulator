@@ -1,3 +1,6 @@
+import sys
+sys.path.append('components/')
+
 from system import *
 from planets import *
 import numpy as np

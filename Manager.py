@@ -1,3 +1,6 @@
+import sys
+sys.path.append('components/')
+
 # Basic Tile
 # Basic ship
 # System activation
