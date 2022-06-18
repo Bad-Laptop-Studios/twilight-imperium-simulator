@@ -12,7 +12,7 @@ class Tile():
         self.position = 0
 
     def become_nova(self) -> Tuple[List[Planet], List[str]]:
-        '''Turn tile into Muaat Supernova'''
+        """Turn tile into Muaat Supernova"""
         self.name = 'Muaat Supernova'
         self.anomalies = 'supernova'
         oldplanets = self.planets
@@ -31,7 +31,7 @@ class Tile():
         self.planets.remove(self.planets.get_name())
 
     def explore(self):
-        '''Removes frontier token'''
+        """Removes frontier token"""
         self.has_frontier_token = False
 
     #Return Functions

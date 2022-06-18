@@ -1,0 +1,3 @@
+INITIAL_LAWS = {
+    
+}

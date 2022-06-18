@@ -1,1 +1,0 @@
-maximum_action_cards = 7    # not constant

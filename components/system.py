@@ -14,15 +14,7 @@ class System():
         self.id = id
         self.activated = []
         self.wormholes = system_data["wormhole"]
-        self.anomalies = []
-        if TI_id in ["44", "45", "79"]:
-            self.anomalies.append("asteriodFields")
-        elif TI_id in ["41", "67"]:
-            self.anomalies.apppend("gravityRifts")
-        elif TI_id in ["42", "68"]:
-            self.anomalies.append("nebulae")
-        elif TI_id in ["43", "80"]:
-            self.anomalies.append("supernova")
+        self.anomalies = self._determine_anomalies(TI_id)
 
         self.planets = []
         for i in range(len(system_data["planets"])):
@@ -33,9 +25,20 @@ class System():
 
         self.ships == []
         
+    def _determine_anomalies(self, TI_id: int) -> List[str]:
+        anomalies = []
+        if TI_id in ["44", "45", "79"]:
+            anomalies.append("asteriodFields")
+        elif TI_id in ["41", "67"]:
+            anomalies.apppend("gravityRifts")
+        elif TI_id in ["42", "68"]:
+            anomalies.append("nebulae")
+        elif TI_id in ["43", "80"]:
+            anomalies.append("supernova")
+        return anomalies
 
     def become_nova(self) -> Tuple[List[Planet], List[str]]:
-        """Turn system into Muaat Supernova."""
+        """ Turn system into Muaat Supernova. """
         self.name = 'Muaat Supernova'
         self.anomalies = 'supernova'
         oldplanets = self.planets
@@ -45,7 +48,7 @@ class System():
         return ((oldplanets,oldwormholes))
 
     def add_wormhole(self, type: str) -> None:
-        """Adds a wormhole of the given type to a system."""
+        """ Adds a wormhole of the given type to a system. """
         self.wormholes.append(type)
 
     def add_planet(self, planet: Planet) -> None:
@@ -53,21 +56,21 @@ class System():
         self.planets.append(planet)
 
     def remove_planet(self, planet_name: str) -> None:
-        """Removes a planet with the given name from the system."""
+        """ Removes a planet with the given name from the system. """
         for p in self.planets:
             if p.get_name() == planet_name:
                 self.planets.remove(p)
 
     def explore(self) -> None:
-        """Removes the frontier token from the system."""
+        """ Removes the frontier token from the system. """
         self.has_frontier_token = False
     
     def activate(self, player_id: int) -> None:
-        """Adds a player to the current activated list."""
+        """ Adds a player to the current activated list. """
         self.activated.append(player_id)
     
     def deactivate_all(self) -> None:
-        """Removes all players from the activated list."""
+        """ Removes all players from the activated list. """
         self.activated = []
 
     def add_ships(self, ships: List[Unit]):
