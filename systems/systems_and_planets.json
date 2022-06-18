@@ -3,25 +3,61 @@
         "type": "green",
         "race": "The Federation of Sol",
         "wormhole": null,
-        "planets": ["Jord"]
+        "planets": [
+            {
+                "name": "Jord",
+                "resources": 4,
+                "influence": 2,
+                "trait": null,
+                "specialty": null,
+                "legendary": false
+            }
+        ]
     },
     "2": {
         "type": "green",
         "race": "The Mentak Coalition",
         "wormhole": null,
-        "planets": ["Moll Primus"]
+        "planets": [
+            {
+                "name": "Moll Primus",
+                "resources": 4,
+                "influence": 1,
+                "trait": null,
+                "specialty": null,
+                "legendary": false
+            }
+        ]
     },
     "3": {
         "type": "green",
         "race": "The Yin Brotherhood",
         "wormhole": null,
-        "planets": ["Darien"]
+        "planets": [
+            {
+                "name": "Darien",
+                "resources": 4,
+                "influence": 4,
+                "trait": null,
+                "specialty": null,
+                "legendary": false
+            }
+        ]
     },
     "4": {
         "type": "green",
         "race": "The Embers of Muaat",
         "wormhole": null,
-        "planets": ["Muaat"]
+        "planets": [
+            {
+                "name": "Muaat",
+                "resources": 4,
+                "influence": 1,
+                "trait": null,
+                "specialty": null,
+                "legendary": false
+            }
+        ]
     },
     "5": {
         "type": "green",
