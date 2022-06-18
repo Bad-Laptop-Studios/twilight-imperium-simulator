@@ -1,7 +1,7 @@
 from typing import *
-from planet import *
+from planets import *
 
-class Tile():
+class system():
     def __init__(self, id: int, name: str, anomalies: List[str], planets: List[Planet], wormholes: List[str], token: bool) -> None:
         self.id = id
         self.name = name
@@ -9,9 +9,10 @@ class Tile():
         self.planets = planets
         self.wormholes = wormholes
         self.has_frontier_token = token
+        self.activated = []
 
     def become_nova(self) -> Tuple[List[Planet], List[str]]:
-        '''Turn tile into Muaat Supernova'''
+        """Turn system into Muaat Supernova."""
         self.name = 'Muaat Supernova'
         self.anomalies = 'supernova'
         oldplanets = self.planets
@@ -21,17 +22,31 @@ class Tile():
         return ((oldplanets,oldwormholes))
 
     def add_wormhole(self, type: str) -> None:
+        """Adds a wormhole of the given type to a system."""
         self.wormholes.append(type)
 
     def add_planet(self, planet: Planet) -> None:
+        """Adds the given planet object to the system."""
         self.planets.append(planet)
 
     def remove_planet(self, planet_name: str) -> None:
-        self.planets.remove(self.planets.get_name())
+        """Removes a planet with the given name from the system."""
+        for p in self.planets:
+            if p.get_name() == planet_name:
+                self.planets.remove(p)
 
-    def explore(self):
-        '''Removes frontier token'''
+    def explore(self) -> None:
+        """Removes the frontier token from the system."""
         self.has_frontier_token = False
+    
+    def activate(self, player_id: int) -> None:
+        """Adds a player to the current activated list."""
+        self.activated.append(player_id)
+    
+    def deactivate_all(self) -> None:
+        """Removes all players from the activated list."""
+        self.activated = []
+
 
     #Return Functions
     def get_id(self) -> int:
@@ -46,5 +61,8 @@ class Tile():
         return self.wormholes
     def has_token(self) -> bool:
         return self.has_frontier_token
+    def activated_by(self) -> List[int]:
+        """Returns the numeric representation of the players that have activated this system"""
+        return self.activated
 
     #__repr__ and __str__ can come later.
