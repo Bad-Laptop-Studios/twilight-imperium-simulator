@@ -8,6 +8,13 @@ CODEX_I   = False
 CODEX_II  = False
 CODEX_III = False
 
+# Wormhole id's this really should be in systems_and_planets.py
+ALPHA = ("26", "39", "79")
+BETA = ("25", "40", "64")
+
+# Hyperlane ids
+HYPERLANES = ["83A", "83B", "84A", "84B", "85A", "85B", "86A", "86B", "87A", "87B", "88A", "88B", "89A", "89B", "90A", "90B", "91A", "91B"]
+
 ADJACENCY_DATA = {
     "0": [1, 2, 3, 4, 5, 6],
     "1": [7, 8, 2, 0, 6, 18],
