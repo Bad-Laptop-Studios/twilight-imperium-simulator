@@ -26,3 +26,7 @@ class Faction():
     def get_commodities(self) -> int:
         """ Returns the faction's default commodity value. """
         return self.commodities
+
+class TitansOfUl(Faction):
+    def __init__(self):
+        pass
