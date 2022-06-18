@@ -5,14 +5,12 @@ sys.path.append('components/')
 # Basic ship
 # System activation
 # planet
-from Map import *
+from map import *
 from typing import *
 from units import *
 from players import *
 from using import *
 
-
-        
 class Game():
     def __init__(self, players: int, map_string):
         self.players = []
@@ -30,7 +28,7 @@ class Game():
         print("1: Tactical Action")
         print("2: Strategic Action")
         print("3: Component Action")
-        action = int(input"Choose Action: "))
+        action = int(input("Choose Action: "))
         
         if (action == 1):
             print("Activation")
@@ -72,4 +70,4 @@ class Game():
         # and activate the system, linking it to the player object
         pass
 
-    def 
+    # There was an unfinished function here, removed to ommit errors
