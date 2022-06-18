@@ -2,50 +2,26 @@
 # Basic ship
 # System activation
 # planet
-
+from Map import *
 from typing import *
-class Player:
-    """
-    Stores token pools, units, owned planets
-    """
-    def __init__(self):
-        self.strategy_card = 0
-        self.faction = 0
-        self.fleet_token = 0
-        self.tactic_token = 0
-        self.strategy_token = 0
-        
-        self.planets = []
-        self.ships = []
-
-        self.activated_systems = []
-
-    def select_strategy_card(self, card_number):
-        self.strategy_card = card_number
-
-    
+from units import *
+from players import *
+from using import *
 
 
-class Unit:
-    def __init__(self):
-        self.cost = 0
-        self.combat = 0
-        self.combat_multiplier = 1
-        self.move = 0
-        self.capacity = 0
-        self.type = ""
-        self.carrying = []
-
-class Structure(Unit):
-    def hello(self):
-        pass
-
-class Ground_Force(Unit):
-    pass
         
 class Game():
-    def __init__(self):
+    def __init__(self, players: int, map_string):
         self.players = []
+        for i in range(players):
+            self.players.append(Player(i+1))
+        
+        self.map = Map()
+        self.map.generate_map(map_string)
+        
+    def start_game(self):
+        while True:
+            raise NotImplementedError
 
     def action_phase(self):
         print("1: Tactical Action")
@@ -55,9 +31,12 @@ class Game():
         
         if (action == 1):
             print("Activation")
-            input("Choose a system to activate: ")
-            activate_system()
-            active_system = 0
+            self.map.print_map(WIDTH, HEIGHT)
+            # Systems will have a number and you enter that number to select it
+            system_id = input("Choose a system to activate: ")
+            systems = self.map.get_systems()
+            active_system = systems[system_id]
+            active_system.activate()
             print("Movement")
             # Choose starting system and system by system move
             

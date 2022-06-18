@@ -1,6 +1,7 @@
 from typing import *
 from planets import *
 from systems_and_planets import *
+from units import *
 class System():
     def __init__(self, TI_id: str, id: int) -> None:
         """
@@ -11,17 +12,26 @@ class System():
         system_data = SYSTEMS[TI_id]
         self.TI_id = TI_id
         self.id = id
+        self.activated = []
         self.wormholes = system_data["wormhole"]
-        
+        self.anomalies = []
+        if TI_id in ["44", "45", "79"]:
+            self.anomalies.append("asteriodFields")
+        elif TI_id in ["41", "67"]:
+            self.anomalies.apppend("gravityRifts")
+        elif TI_id in ["42", "68"]:
+            self.anomalies.append("nebulae")
+        elif TI_id in ["43", "80"]:
+            self.anomalies.append("supernova")
+
         self.planets = []
         for i in range(len(system_data["planets"])):
-            self.planets.append(Planet(TI_id, i))
+            self.add_planet(Planet(TI_id, i))
 
-        self.activated = []
-        
-        #self.name = name
-        #self.anomalies = anomalies
-        #self.has_frontier_token = token
+        self.name = TI_id
+        self.has_frontier_token = False
+
+        self.ships == []
         
 
     def become_nova(self) -> Tuple[List[Planet], List[str]]:
@@ -59,6 +69,10 @@ class System():
     def deactivate_all(self) -> None:
         """Removes all players from the activated list."""
         self.activated = []
+
+    def add_ships(self, ships: List[Unit]):
+        for unit in ships:
+            self.ships.append(unit)
 
 
     #Return Functions

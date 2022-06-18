@@ -15,6 +15,15 @@ BETA = ("25", "40", "64")
 # Hyperlane ids
 HYPERLANES = ["83A", "83B", "84A", "84B", "85A", "85B", "86A", "86B", "87A", "87B", "88A", "88B", "89A", "89B", "90A", "90B", "91A", "91B"]
 
+# Width and height of hexagons in text display
+# 2, 1
+# 5, 2
+# 8, 3
+# 11, 4
+# 14, 5
+WIDTH = 14
+HEIHGT = 5
+
 ADJACENCY_DATA = {
     "0": [1, 2, 3, 4, 5, 6],
     "1": [7, 8, 2, 0, 6, 18],

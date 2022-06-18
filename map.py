@@ -13,7 +13,7 @@ class Map():
 
     def generate_map(self, map_string: str) -> None:
         """
-        Generate list of tiles and adjacency matrix from map string
+        Generate list of tiles and an adjacency matrix from map string
         """
         # Mecatol Rex always at center of board
         # and not included in map string
@@ -28,15 +28,21 @@ class Map():
         
         
         self.map = np.zeros((size, size))
+        # index represents position in a spiral outwards from map center
+        # see print_map for more details
         self.tiles = []
         # index represent position on board
         # number at index represent TI tile id
-        
+
+        # For every number in map_string turn it into a tile and
+        # add it to self.tiles
+        # also add which tiles it is adjacent too into self.map
         for position in range(len(map_string)):
             id = map_string[position]
             if id != "0":
                 self.tiles.append(System(id, position))
 
+                # if tile is a wormhole store it for later
                 if id in ALPHA:
                     alpha_wormhole_pos.append(position)
                 
@@ -44,6 +50,7 @@ class Map():
                     beta_wormhole_pos.append(position)
                     
             else:
+                # if tile is empty 
                 self.tiles.append(0)
 
             # Alter adjacency map
@@ -63,7 +70,9 @@ class Map():
                     end = ADJACENCY_DATA[str(position)][hyperlane[1]]
                     self.map[start][end] = 1
                     self.map[end][start] = 1
-                    
+
+        # index is what index the wormholes are at in self.tiles
+        # for each wormhole set it to be adjacent to the others
         for index in alpha_wormhole_pos:
             for adj_index in alpha_wormhole_pos:
                 if index != adj_index:
@@ -91,16 +100,22 @@ class Map():
         # index 19-36 is radius 3 circle
         # r*6 is number of hexagons in each concentric ring
         filled = np.zeros((9*2, 9))
+        # Center of map always has tile
         filled[8][4] = 1
         filled[9][4] = 1
+
+        # Represent moving in a hexagonal circle on our grid
         DIRECTIONS = [(1, 1), (2, 0), (1, -1), (-1, -1), (-2, 0), (-1, 1)]
         
         # start from index 1 tile above center at top hexagon
         y = 6
         x = 4
+
+        # stay and offset control where the hexagonal spiral is
         stay = 1
         offset = 0
         for i in range(len(self.tiles)-1):
+            # when reach the end of the spiral jump to the next
             if i == offset + 6*stay:
                 offset = i
                 stay += 1
@@ -109,11 +124,14 @@ class Map():
             if self.tiles[min(i+1, len(self.tiles)-1)] != 0:
                 filled[y][x] = int(self.tiles[min(i+1, len(self.tiles)-1)].get_TI_id())
                 filled[y+1][x] = int(self.tiles[min(i+1, len(self.tiles)-1)].get_TI_id())
+            # move in a hexagonal spiral
+            # as stay increases stay in a single direction for longer
             x += DIRECTIONS[((i-offset) // stay) % 6][1]
             y += DIRECTIONS[((i-offset) // stay) % 6][0]
 
         # Create list containing base hexagon shape
         # each line corresponds to part of the shape
+        # This part of the code is where information about each tile could be added
         hexagon = []    
         for i in range(height):
             hexagon.append('/' + ' ' * (width+i*2))
@@ -169,6 +187,8 @@ class Map():
                             first_fill = 0
                         
                     else:
+                        # if on a non-filled tile and last tile was filled complete the last tile
+                        # add a top to a hexagon if below current position is filled
                         if final_w == -1:
                             if line == height-1 and filled[min(h+1, 17)][w]:
                                 output += ' ' * height + '_' * width
@@ -190,7 +210,9 @@ class Map():
                             output += ' ' + '_'*width
                             final_w = -2
                                 
-
+                    # since tiles are completed by the subsequent tile
+                    # in the final column the right of the hexagons will be unfilled
+                    # so we fill them
                     if w == 8 and final_w == 8:
                         if final_w == -2:
                             continue
@@ -201,8 +223,6 @@ class Map():
                         else:
                             # Hex Top
                             output += '\\'
-
-
                 print(output)         
             
 
@@ -214,7 +234,7 @@ class Map():
 
         return self.map
 
-    def get_tiles(self):
+    def get_systems(self):
         """
         Return list of systems
         """
@@ -227,11 +247,7 @@ map_input = input("Enter map string: ")
 maps.generate_map(map_input)
 
 maps.print_map(14, 5)
-# 2, 1
-# 5, 2
-# 8, 3
-# 11, 4
-# 14, 5
+
 
 
 """    __
