@@ -8,6 +8,30 @@ class Unit:
         self.type = ""
         self.carrying = []
 
+class Ship(Unit):
+    pass
+
+class Deadnought(Ship):
+    pass
+
+class WarSun(Ship):
+    pass
+
+class Flagship(Ship):
+    pass
+
+class Fighter(Ship):
+    pass
+
+class Destroyer(Ship):
+    pass
+
+class Carrier(Ship):
+    pass
+
+class Cruiser(Ship):
+    pass
+
 class Structure(Unit):
     def hello(self):
         pass

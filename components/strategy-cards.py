@@ -29,14 +29,14 @@ class Leadership(StrategyCard):
         self._secondary_code = "" # custom programming language to represent above
 
     def resolve_primary(self, player: Player) -> None:
-        player.change_commodities(3) # method does not exist yet
+        player.change_command_tokens(3) # method does not exist yet
         self.resolve_secondary(player)
 
     def resolve_secondary(self, player: Player) -> None:
         # the following is NOT actual Python code
         # the ability depends on implementation of the calling class
         value = "however this INTEGER is calculated"
-        player.change_command_tokens(value)
+        player.change_commodities(value)
 
 class Diplomacy(StrategyCard):
     def __init__(self):
