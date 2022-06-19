@@ -11,6 +11,8 @@ class Player:
         self._tactic_tokens = 3
         self._strategy_tokens = 2
         self._commodities = 0
+        self._commodity_bonus = 0
+        self._trade_goods = 0
         
         self.planets = []
         self.ships = []
@@ -32,7 +34,7 @@ class Player:
 
     def alter_command_tokens(self, amount: int, pool: str) -> None:
         """
-        Increases the player's commodities by the amount.
+        Increase the player's commodities by the amount.
         """
         if pool == "fleet":
             self._fleet_tokens += amount
@@ -40,26 +42,46 @@ class Player:
             self._tactic_tokens += amount
         elif pool == "strategy":
             self._strategy_tokens += amount
+        raise NotImplementedError
 
-    def change_commodities(self, amount: int) -> None:
-        """ Changes the player's number of commodities by the amount. Ensures commodities remain non-negative. """
+    def alter_commodities(self, amount: int) -> None:
+        """ Change the player's number of commodities by the amount. Ensures commodities remain non-negative. """
         self._commodities = max(0, self._commodities + amount)
 
     def draw_action_cards(self, number: int) -> None:
-        """ Draws the number of action cards. Ensures player's action card count remains valid. """
+        """ Draw the number of action cards. Ensures player's action card count remains valid. """
         raise NotImplementedError
 
     def get_fleet_tokens(self) -> int:
-        """ Returns the number of command tokens in the player's fleet pool. """
+        """ Return the number of command tokens in the player's fleet pool. """
         return self._fleet_tokens
     def get_tactic_tokens(self) -> int:
-        """ Returns the number of command tokens in the player's tactic pool. """
+        """ Return the number of command tokens in the player's tactic pool. """
         return self._tactic_tokens
     def get_strategy_tokens(self) -> int:
-        """ Returns the number of command tokens in the player's strategy pool. """
+        """ Return the number of command tokens in the player's strategy pool. """
         return self._strategy_tokens
 
     def get_unit_upgrades(self) -> List[str]:
-        """ Returns a list of all the units that are upgraded.
+        """ Return a list of all the units that are upgraded.
             Note that unlocking Warsuns is treated as an upgrade. """
         return self._unit_upgrades
+
+    @property
+    def trade_goods(self) -> None:
+        return self._trade_goods
+
+    @trade_goods.setter
+    def trade_goods(self, value: int) -> None:
+        """ Set the player's number of trade goods to the value. """
+        self._trade_goods = value
+
+    def alter_trade_goods(self, amount: int) -> bool:
+        """ Add amount to player's trade goods. Returns False if final value is maxed to 0, True otherwise."""
+        value = self.trade_goods + amount
+        self.trade_goods = max(0, value)
+        return value >= 0
+    
+    def replenish_commodities(self) -> None:
+        """ Replenish commodities. """
+        self._commodities = self._faction.commodities + self._commodity_bonus
