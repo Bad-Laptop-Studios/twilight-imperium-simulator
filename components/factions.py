@@ -1,4 +1,4 @@
-import using
+import constants
 
 class Faction():
     def __init__(self):
@@ -8,7 +8,7 @@ class Faction():
         self._faction_technologies = None
         self._faction_units = None
         self._flagship = None
-        if using.POK:
+        if constants.POK:
             self.mech = None
             self.learders = None
 

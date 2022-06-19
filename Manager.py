@@ -13,7 +13,7 @@ from map import *
 from typing import *
 from units import *
 from players import *
-from using import *
+from constants import *
 
 class Game():
     def __init__(self, players: int, map_string):

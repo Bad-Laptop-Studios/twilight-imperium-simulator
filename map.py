@@ -4,7 +4,7 @@ sys.path.append('components/')
 from system import *
 from planets import *
 import numpy as np
-from using import *
+from constants import *
 from systems_and_planets import *
 from typing import *
 np.set_printoptions(threshold=np.inf)
