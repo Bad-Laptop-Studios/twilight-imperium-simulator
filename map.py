@@ -246,12 +246,18 @@ class Map():
 
 maps = Map()
 #https://keeganw.github.io/ti4
-map_input = input("Enter map string: ")
-maps.generate_map(map_input)
 
-maps.print_map(14, 5)
+def main():
+    try:
+        map_input = input("Enter map string: ")
+        maps.generate_map(map_input)
 
+        maps.print_map(14, 5)
+    except:
+        print("Invalid map string! Try again.")
+        main()
 
+main()
 
 """    __
     __/ff\__             
