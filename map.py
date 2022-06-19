@@ -1,20 +1,22 @@
 import sys
 sys.path.append('components/')
 
-from components.system import *
-from components.planets import *
+from system import *
+from planets import *
 import numpy as np
 from constants import *
-from components.systems_and_planets import *
+from systems_and_planets import *
 from typing import *
 np.set_printoptions(threshold=np.inf)
+DEFAULT_MAP = "38 24 31 59 62 37 42 61 21 40 60 79 64 71 49 67 29 26 76 46 34 65 30 35 77 69 70 68 20 27 43 33 74 41 72 22 0 19 63 0 48 45 0 39 44 0 50 28 0 47 25 0 36 32 0 78 23 0 73 66"
+
 class Map():
     def __init__(self):
         # Map 
         self.map = []
         self.tiles = []
 
-    def generate_map(self, map_string: str) -> None:
+    def generate_map(self, map_string=DEFAULT_MAP) -> None:
         """
         Generate list of tiles and an adjacency matrix from map string
         """
@@ -228,22 +230,64 @@ class Map():
                             output += '\\'
                 map_list.append(output)      
         print(filled)
+        completed_tiles = []
+        
         for i in range(len(map_list)):
-            if i % (height*2) == 1:
+            if i % (height) == 1:
                 row = (i-1) // height
                 for u in range(len(filled[row])):
-                    if filled[row][u]:
-                        alter = map_list[i]
-                        alter1 = alter[:(height+u*(height+width))]
-                        alter2 = alter[((u+1)*(width+height)):]
-                        middle = str(filled[row][u])
-                        offset = width-len(middle)
-                        for t in range(offset):
-                            if t < (offset/2):
-                                middle = ' ' + middle
-                            else:
-                                middle += ' '
-                        map_list[i] = alter1 + middle + alter2
+                    if filled[row][u] and filled[row][u] not in completed_tiles:
+                        textagon = []
+                        system = self.tiles[int(filled[row][u])]
+                        units = system.get_units()
+                        units_char = []
+                        for unit in units:
+                            units_char.append(unit.get_char())
+
+                        units_char.sort()
+                        count = 0
+                        if len(units_char) > 0:
+                            letter = units_char[0]
+                            for g in range(len(units_char)):
+                                if units_char[g] == letter:
+                                    count += 1
+                                    
+                                else:
+                                    textagon.append(str(count)+g)
+                                    count = 1
+                                letter = units_char[g]
+
+                        textagon.append(str(filled[row][u]))
+                        # add wormhole support
+                        # add planetsupport
+                        activated = system.activated_by()
+                        for p in activated:
+                            textagon.append(str(p))
+
+                        
+                        for line in range(height*2):
+                            alter = map_list[i]
+                            alter1 = alter[:(height+u*(height+width))]
+                            alter2 = alter[((u+1)*(width+height)):]
+                            middle = ''
+                            pop_num = 0
+                            for text in textagon:
+                                if len(middle+text)+1 < height:
+                                    middle += text + ' '
+                                    pop_num += 1
+
+                            for k in range(pop_num):
+                                textagon.pop(0)
+                                               
+
+                            
+                            offset = width-len(middle)
+                            for t in range(offset):
+                                if t < (offset/2):
+                                    middle = ' ' + middle
+                                else:
+                                    middle += ' '
+                            map_list[i] = alter1 + middle + alter2
 
                         
             print(i, map_list[i])
@@ -266,7 +310,9 @@ class Map():
 maps = Map()
 #https://keeganw.github.io/ti4
 map_input = input("Enter map string: ")
-maps.generate_map(map_input)
+if map_input != '':
+    maps.generate_map(map_input)
+else:
+    maps.generate_map()
 
 maps.print_map(14, 5)
-
