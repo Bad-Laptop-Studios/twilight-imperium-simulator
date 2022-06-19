@@ -3,37 +3,37 @@ from planets import *
 from systems_and_planets import *
 from units import *
 class System():
-    def __init__(self, TI_id: str, id: int) -> None:
+    def __init__(self, system_id: str, id: int) -> None:
         """
         self, id: int, name: str, anomalies: List[str], planets: List[Planet], wormholes: List[str], token: bool)
 
-        Creates a system using its TI_id using data found in systems_and_planets.py
+        Creates a system using its system_id using data found in systems_and_planets.py
         """
-        system_data = SYSTEMS[TI_id]
-        self.TI_id = TI_id
+        system_data = SYSTEMS[system_id]
+        self.system_id = system_id
         self.id = id
         self.activated = []
         self.wormholes = system_data["wormhole"]
-        self.anomalies = self._determine_anomalies(TI_id)
+        self.anomalies = self._determine_anomalies(system_id)
 
         self.planets = []
         for i in range(len(system_data["planets"])):
-            self.add_planet(Planet(TI_id, i))
+            self.add_planet(Planet(system_id, i))
 
-        self.name = TI_id
+        self.name = system_id
         self.has_frontier_token = False
 
         self.ships = []
         
-    def _determine_anomalies(self, TI_id: int) -> List[str]:
+    def _determine_anomalies(self, system_id: int) -> List[str]:
         anomalies = []
-        if TI_id in ["44", "45", "79"]:
+        if system_id in ["44", "45", "79"]:
             anomalies.append("asteriodFields")
-        elif TI_id in ["41", "67"]:
+        elif system_id in ["41", "67"]:
             anomalies.append("gravityRifts")
-        elif TI_id in ["42", "68"]:
+        elif system_id in ["42", "68"]:
             anomalies.append("nebulae")
-        elif TI_id in ["43", "80"]:
+        elif system_id in ["43", "80"]:
             anomalies.append("supernova")
         return anomalies
 
@@ -81,8 +81,8 @@ class System():
     #Return Functions
     def get_id(self) -> int:
         return self.id
-    def get_TI_id(self) -> str:
-        return self.TI_id
+    def get_system_id(self) -> str:
+        return self.system_id
     def get_name(self) -> str:
         return self.name
     def get_anomalies(self) -> List[str]:

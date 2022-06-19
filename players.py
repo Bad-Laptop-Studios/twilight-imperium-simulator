@@ -30,10 +30,16 @@ class Player:
     def get_id(self) -> int:
         return self.id
 
-    def gain_command_tokens(self, amount: int) -> None:
-        """ Increases the player's commodities by the amount.
-        How do we implement this? How do we decide which pool to put the tokens in """
-        raise NotImplementedError
+    def alter_command_tokens(self, amount: int, pool: str) -> None:
+        """
+        Increases the player's commodities by the amount.
+        """
+        if pool == "fleet":
+            self._fleet_tokens += amount
+        elif pool == "tactic":
+            self._tactic_tokens += amount
+        elif pool == "strategy":
+            self._strategy_tokens += amount
 
     def change_commodities(self, amount: int) -> None:
         """ Changes the player's number of commodities by the amount. Ensures commodities remain non-negative. """
