@@ -1,7 +1,7 @@
 from typing import *
-from planets import *
-from systems_and_planets import *
-from units import *
+from components.planets import *
+from components.systems_and_planets import *
+from components.units import *
 class System():
     def __init__(self, system_id: str, id: int) -> None:
         """
