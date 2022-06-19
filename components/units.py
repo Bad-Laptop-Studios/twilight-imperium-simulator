@@ -1,4 +1,4 @@
-import using
+import constants
 from players import *
 
 # The backets is the modifier. x for multiply, + for addition.
@@ -150,7 +150,7 @@ class Infantry(GroundForce):
     ABILITY_CODE_UPGRADE = "After this unit is destroyed, roll 1 die. If the result is 6 or greater, place the unit on this card. At the start of your next turn, place each unit that is on this card on a planet you control in your home system."
 
 
-if using.POK:
+if constants.POK:
     class Mech(GroundForce):
         STATS_BASE: Stats      = 2, 6, 0, 0
         STATS_UPGRADED: Stats  = STATS_BASE # just in case it's somehow upgraded

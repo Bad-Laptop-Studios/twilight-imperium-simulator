@@ -1,4 +1,4 @@
-import using
+import constants
 
 class Unit:
     def __init__(self):
@@ -94,7 +94,7 @@ class Infantry(GroundForce):
         self._cost, self._combat, self._move, self._capacity = 1, 8, 0, 0
         self._cost_units = 2
 
-if using.POK:
+if constants.POK:
     class Mech(GroundForce):
         """ CLASS IS INCOMPLETE - ALL MECHS ARE DIFFERENT"""
         def __init__(self) -> None:
