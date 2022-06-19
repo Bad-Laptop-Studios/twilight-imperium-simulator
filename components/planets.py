@@ -2,9 +2,9 @@ from typing import List
 from factions import *
 from systems_and_planets import *
 class Planet():
-    def __init__(self, TI_id: str, num:int):
+    def __init__(self, system_id: str, num:int):
         #number is index of planet in system dictionary
-        planet_data = SYSTEMS[TI_id]["planets"][num]
+        planet_data = SYSTEMS[system_id]["planets"][num]
         self._name = planet_data["name"]
         self._resource = planet_data["resources"]
         self._influence = planet_data["influence"]
