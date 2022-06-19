@@ -2,9 +2,9 @@ import sys
 sys.path.insert(0, 'D:/Documents/GitHub/twilight-imperium-simulator')
 
 from typing import *
-from components.planets import *
-from components.systems_and_planets import *
-from components.units import *
+from planets import *
+from systems_and_planets import *
+from units import *
 class System():
     def __init__(self, system_id: str, id: int) -> None:
         """
@@ -73,9 +73,11 @@ class System():
         """ Removes all players from the activated list. """
         self.activated = []
 
-    def add_units(self, units: List[Unit]):
-        for unit in units:
-            self.units.append(unit)
+    def add_unit(self, unit: Unit):
+        self.units.append(unit)
+
+    def remove_unit(self, index: int) -> None:
+        self.units.pop(index)
 
 
     #Return Functions
@@ -84,7 +86,7 @@ class System():
     def get_system_id(self) -> str:
         return self.system_id
     def get_units(self) -> List[Unit]:
-        return self.units
+        return self.units.copy()
     def get_anomalies(self) -> List[str]:
         return self.anomalies
     def get_planets(self) -> List[Planet]:

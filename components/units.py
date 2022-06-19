@@ -56,6 +56,9 @@ class Unit:
         """
         return self._stats + self._cost_units + self._combat_burst
 
+    def get_player_id(self) -> int:
+        return self._player
+
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({STATS_BASE})"
 

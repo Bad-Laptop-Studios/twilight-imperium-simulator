@@ -125,8 +125,8 @@ class Map():
                 y += -2
 
             if self.tiles[min(i+1, len(self.tiles)-1)] != 0:
-                filled[y][x] = int(self.tiles[min(i+1, len(self.tiles)-1)].get_system_id())
-                filled[y+1][x] = int(self.tiles[min(i+1, len(self.tiles)-1)].get_system_id())
+                filled[y][x] = i+1
+                filled[y+1][x] = i+1
             # move in a hexagonal spiral
             # as stay increases stay in a single direction for longer
             x += DIRECTIONS[((i-offset) // stay) % 6][1]
@@ -144,7 +144,7 @@ class Map():
             
         hexagon.append('\\' + '_' * width)
         hexagon_end = ['\\', '\\', '\\', '/', '/', '/']
-
+        map_list = []
         # Print the top of the first line of hexagons
         output = ''
         for w in range(len(filled[0])):
@@ -152,7 +152,7 @@ class Map():
                 output += ' ' * height + '_' * width
             else:
                 output += ' ' * (height+width)
-        print(output)
+        map_list.append(output)
 
         # Imagining the hexagonal grid as instead a grid of half hexagons
         # that alternate up and down along x and y axis
@@ -226,8 +226,27 @@ class Map():
                         else:
                             # Hex Top
                             output += '\\'
-                print(output)         
-            
+                map_list.append(output)      
+        print(filled)
+        for i in range(len(map_list)):
+            if i % (height*2) == 1:
+                row = (i-1) // height
+                for u in range(len(filled[row])):
+                    if filled[row][u]:
+                        alter = map_list[i]
+                        alter1 = alter[:(height+u*(height+width))]
+                        alter2 = alter[((u+1)*(width+height)):]
+                        middle = str(filled[row][u])
+                        offset = width-len(middle)
+                        for t in range(offset):
+                            if t < (offset/2):
+                                middle = ' ' + middle
+                            else:
+                                middle += ' '
+                        map_list[i] = alter1 + middle + alter2
+
+                        
+            print(i, map_list[i])
 
     def get_map(self):
         """
@@ -243,7 +262,7 @@ class Map():
         """
         return self.tiles
 
-
+#Testing
 maps = Map()
 #https://keeganw.github.io/ti4
 map_input = input("Enter map string: ")
