@@ -23,14 +23,14 @@ class System():
         self.name = TI_id
         self.has_frontier_token = False
 
-        self.ships == []
+        self.ships = []
         
     def _determine_anomalies(self, TI_id: int) -> List[str]:
         anomalies = []
         if TI_id in ["44", "45", "79"]:
             anomalies.append("asteriodFields")
         elif TI_id in ["41", "67"]:
-            anomalies.apppend("gravityRifts")
+            anomalies.append("gravityRifts")
         elif TI_id in ["42", "68"]:
             anomalies.append("nebulae")
         elif TI_id in ["43", "80"]:
