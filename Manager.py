@@ -13,7 +13,7 @@ from map import *
 from typing import *
 from components.units import *
 from players import *
-from constants import *
+from using import *
 
 class Game():
     def __init__(self, players: int, map_string):
@@ -45,18 +45,39 @@ class Game():
             active_system = activate_system()
             print("Movement")
             # Choose starting system and system by system move
-            
-            position_idinput("Choose a system to move ships from")
 
-            
-            # check if system has a command token from the active player
-            # loop that prints a list of units inside system and
-            # prompts user to select which units they want to move out of the
-            # system,check if ship has enough movement to reach the active
-            # system, or don't and tell them when the action fails
-            
-            # prompt user to choose a adjacent system to move them to
-            # check if system
+            while True:
+                route = input("Input a series of systems to travel through: ")
+                route = route.split(' ')
+ 
+                # Check if route ends in the active system
+                if int(route[-1]) != active_system.get_id():
+                    print("Your route must end in the active system.\n Please try again.")
+
+                units = active_system.get_units()
+                for i in range(len(units)):
+                    print(str(i) + ': ' + repr(units[i]))
+
+                unit_selection = []
+                selection_input = ''
+                print("Enter each ship individually. Enter 'end' to end selection")
+                while selection_input != 'end':
+                    selection_input = int(input("Enter the ship you want to move: "))
+                    unit_selection.append(selection_input)
+
+                    stats = u
+
+                            
+                # Check if all ships have high enough movement to travel route
+                
+                # check if system has a command token from the active player
+                # loop that prints a list of units inside system and
+                # prompts user to select which units they want to move out of the
+                # system,check if ship has enough movement to reach the active
+                # system, or don't and tell them when the action fails
+                
+                # prompt user to choose a adjacent system to move them to
+                # check if system
 
         elif action == 2:
             pass

@@ -1,4 +1,7 @@
-import constants
+import sys
+sys.path.insert(0, 'D:/Documents/GitHub/twilight-imperium-simulator')
+
+from constants import *
 from players import *
 
 # The backets is the modifier. x for multiply, + for addition.
@@ -53,6 +56,8 @@ class Unit:
         """
         return self._stats + self._cost_units + self._combat_burst
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({STATS_BASE})"
 
 # ---------- SHIPS ---------- #
 class Ship(Unit):
@@ -150,7 +155,7 @@ class Infantry(GroundForce):
     ABILITY_CODE_UPGRADE = "After this unit is destroyed, roll 1 die. If the result is 6 or greater, place the unit on this card. At the start of your next turn, place each unit that is on this card on a planet you control in your home system."
 
 
-if constants.POK:
+if POK:
     class Mech(GroundForce):
         STATS_BASE: Stats      = 2, 6, 0, 0
         STATS_UPGRADED: Stats  = STATS_BASE # just in case it's somehow upgraded

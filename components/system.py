@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, 'D:/Documents/GitHub/twilight-imperium-simulator')
+
 from typing import *
 from components.planets import *
 from components.systems_and_planets import *
@@ -19,11 +22,9 @@ class System():
         self.planets = []
         for i in range(len(system_data["planets"])):
             self.add_planet(Planet(system_id, i))
-
-        self.name = system_id
         self.has_frontier_token = False
 
-        self.ships = []
+        self.units = []
         
     def _determine_anomalies(self, system_id: int) -> List[str]:
         anomalies = []
@@ -39,7 +40,6 @@ class System():
 
     def become_nova(self) -> Tuple[List[Planet], List[str]]:
         """ Turn system into Muaat Supernova. """
-        self.name = 'Muaat Supernova'
         self.anomalies = 'supernova'
         oldplanets = self.planets
         oldwormholes = self.wormholes
@@ -73,9 +73,9 @@ class System():
         """ Removes all players from the activated list. """
         self.activated = []
 
-    def add_ships(self, ships: List[Unit]):
-        for unit in ships:
-            self.ships.append(unit)
+    def add_units(self, units: List[Unit]):
+        for unit in units:
+            self.units.append(unit)
 
 
     #Return Functions
@@ -83,8 +83,8 @@ class System():
         return self.id
     def get_system_id(self) -> str:
         return self.system_id
-    def get_name(self) -> str:
-        return self.name
+    def get_units(self) -> List[Unit]:
+        return self.units
     def get_anomalies(self) -> List[str]:
         return self.anomalies
     def get_planets(self) -> List[Planet]:
