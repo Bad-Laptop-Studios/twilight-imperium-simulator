@@ -1,6 +1,6 @@
 from typing import List
-from factions import *
-from systems_and_planets import *
+from components.factions import *
+from components.systems_and_planets import *
 class Planet():
     def __init__(self, system_id: str, num:int):
         #number is index of planet in system dictionary
