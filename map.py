@@ -1,11 +1,12 @@
 import sys
 sys.path.append('components/')
 
-from system import *
-from planets import *
+# is someone changing these imports? Please tell me -Darcy
+from components.system import *
+from components.planets import *
 import numpy as np
 from constants import *
-from systems_and_planets import *
+from components.systems_and_planets import *
 from typing import *
 np.set_printoptions(threshold=np.inf)
 DEFAULT_MAP = "38 24 31 59 62 37 42 61 21 40 60 79 64 71 49 67 29 26 76 46 34 65 30 35 77 69 70 68 20 27 43 33 74 41 72 22 0 19 63 0 48 45 0 39 44 0 50 28 0 47 25 0 36 32 0 78 23 0 73 66"
