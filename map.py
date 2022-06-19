@@ -1,11 +1,11 @@
 import sys
-# sys.path.append('components/')
+sys.path.append('components/')
 
-from components.system import *
-from components.planets import *
+from system import *
+from planets import *
 import numpy as np
 from constants import *
-from components.systems_and_planets import *
+from systems_and_planets import *
 from typing import *
 np.set_printoptions(threshold=np.inf)
 class Map():
@@ -125,8 +125,8 @@ class Map():
                 y += -2
 
             if self.tiles[min(i+1, len(self.tiles)-1)] != 0:
-                filled[y][x] = int(self.tiles[min(i+1, len(self.tiles)-1)].get_TI_id())
-                filled[y+1][x] = int(self.tiles[min(i+1, len(self.tiles)-1)].get_TI_id())
+                filled[y][x] = int(self.tiles[min(i+1, len(self.tiles)-1)].get_system_id())
+                filled[y+1][x] = int(self.tiles[min(i+1, len(self.tiles)-1)].get_system_id())
             # move in a hexagonal spiral
             # as stay increases stay in a single direction for longer
             x += DIRECTIONS[((i-offset) // stay) % 6][1]
