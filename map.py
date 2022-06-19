@@ -1,11 +1,11 @@
 import sys
-sys.path.append('components/')
+# sys.path.append('components/')
 
-from system import *
-from planets import *
+from components.system import *
+from components.planets import *
 import numpy as np
 from constants import *
-from systems_and_planets import *
+from components.systems_and_planets import *
 from typing import *
 np.set_printoptions(threshold=np.inf)
 class Map():

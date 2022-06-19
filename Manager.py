@@ -1,5 +1,5 @@
 import sys
-sys.path.append('components/')
+# sys.path.append('components/')
 
 # Basic Tile
 # Basic ship
@@ -7,7 +7,7 @@ sys.path.append('components/')
 # planet
 from map import *
 from typing import *
-from units import *
+from components.units import *
 from players import *
 from constants import *
 
