@@ -1,5 +1,5 @@
 import sys
-# sys.path.append('components/')
+sys.path.append('components/')
 
 # Basic Tile
 # Basic ship
@@ -11,7 +11,7 @@ sys.path.append("components/")
 
 from map import *
 from typing import *
-from components.units import *
+from units import *
 from players import *
 from using import *
 
@@ -53,19 +53,29 @@ class Game():
                 # Check if route ends in the active system
                 if int(route[-1]) != active_system.get_id():
                     print("Your route must end in the active system.\n Please try again.")
-
+                    continue
+                    
                 units = active_system.get_units()
                 for i in range(len(units)):
                     print(str(i) + ': ' + repr(units[i]))
 
                 unit_selection = []
                 selection_input = ''
+
+                invalid_move_speed = False
                 print("Enter each ship individually. Enter 'end' to end selection")
                 while selection_input != 'end':
                     selection_input = int(input("Enter the ship you want to move: "))
+                    stats = units[selection_input].get_stats
+                    if stats[2] < len(route):
+                        print("The ship must have high enough movement to traverse the route.\n Please try again.")
+                        continue
+                    
                     unit_selection.append(selection_input)
 
-                    stats = u
+                    
+                
+                        
 
                             
                 # Check if all ships have high enough movement to travel route
