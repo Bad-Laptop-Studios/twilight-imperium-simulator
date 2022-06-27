@@ -99,7 +99,7 @@ class Destroyer(Ship):
     def char(self) -> str:
         return 'd'
 
-class Deadnought(Ship):
+class Dreadnought(Ship):
     STATS_BASE: Stats      = 4, 5, 1, 1
     STATS_UPGRADED: Stats  = 4, 5, 2, 1
     STATS_MODIFIERS: Stats = 1, 1, 0, 0

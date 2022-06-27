@@ -100,156 +100,212 @@ def grid_to_ascii(map_grid) -> str:
     """
 
     # ---------- components ---------- #
-    def bases_on(row_index):
-        """
-        Parameters:
-            row_index: row_index for hexagon below the base
-        """
-        lines_to_nearest_base = 0
-        ascii_line = ""
-        # print cols in groups of 2s
-        ascii_line += buffer(lines_to_nearest_base) + corner(row_index, 0, 0)
-        for col_index in range(0, cols - 1, 2):
-            ascii_line += base(row_index, col_index) + corner(row_index, col_index, 1) + inside(Y_SCALE, row_index - 1, col_index + 1) + corner(row_index, col_index + 2, 0)
-        if cols % 2:
-            ascii_line += base(row_index, cols - 1) + corner(row_index, cols - 1, 1)
-        ascii_line += '\n'
-            
-        return ascii_line
+    def bases(row_num, line_index):
 
-    def bases_off(row_index):
-        """
-        Parameters:
-            row_index: row_index for hexagon below the base
-        """
-        lines_to_nearest_base = Y_SCALE
-        ascii_line = ""
-        ascii_line += buffer(lines_to_nearest_base) + corner(row_index, -1, 1)
-        # print cols in groups of 2s
-        for col_index in range(1, cols, 2):
-            ascii_line += inside(Y_SCALE, row_index, col_index - 1) + corner(row_index, col_index, 0) + base(row_index, col_index) + corner(row_index, col_index, 1)
-        if cols % 2:
-            ascii_line += inside(Y_SCALE, row_index, cols - 1) + corner(row_index, cols, 0)
-        ascii_line += '\n'
-            
-        return ascii_line
-
-    def base(row_index, col_index) -> str:
-        """ Return base of hexagon in ASCII.
-
-        Parameters:
-            row_index: row_index for hexagon below the base
-            col_index: col_index for hexagon
-        """
-        # get neighbour positions, clockwise from (row_index, col_index)
-        neighbours = ((row_index, col_index),
-                      (row_index - 1, col_index))
-
-        # return characters
-        count = share_count(neighbours)
-        if not count:
-            return X_SCALE * ' '
-        return X_SCALE * '-'
-
-    def corner(row_index, col_index, corner_index) -> str:
-        """ Return corner of hexagon in ASCII.
-        
-        Parameters:
-            row_index: row_index for hexagon below corner
-            col_index: col_index for hexagon below corner
-            corner_index: 0 for left, 1 for right
-        """
-        # get neighbour positions, clockwise from (row_index, col_index)
-
-        # unoptimised version: better demonstrates how vector is calculated.
-        # code golf attempt:
-        # neighbours = ((row_index, col_index),
-        #               (row_index - 1, col_index),
-        #               (row_index, col_index + 1))
-        
-        # optimised version: only calculate what we need
-        # incorrect now. Update to match unoptimised version
-        if not col_index % 2:   # even
-            if not corner_index:    # 0
-                neighbours = ((row_index, col_index),
-                              (row_index - 1, col_index - 1),
-                              (row_index - 1, col_index))
-                            
-            else:                   # 1
-                neighbours = ((row_index, col_index),
-                              (row_index - 1, col_index),
-                              (row_index - 1, col_index + 1))
+        def bases_on(row_index):
+            """
+            Parameters:
+                row_index: row_index for hexagon below the base
+            """
+            lines_to_nearest_base = 0
+            ascii_line = ""
+            # print cols in groups of 2s
+            ascii_line += buffer(lines_to_nearest_base) + corner(row_index, 0, 0)
+            for col_index in range(0, cols - 1, 2):
+                ascii_line += base(row_index, col_index) + corner(row_index, col_index, 1) + inside(Y_SCALE, row_index - 1, col_index + 1) + corner(row_index, col_index + 2, 0)
+            if cols % 2:
+                ascii_line += base(row_index, cols - 1) + corner(row_index, cols - 1, 1)
+            ascii_line += '\n'
                 
-        else:                   # odd
-            if not corner_index:    # 0
-                neighbours = ((row_index, col_index),
-                              (row_index, col_index - 1),
-                              (row_index - 1, col_index))
-                            
-            else:                   # 1
-                neighbours = ((row_index, col_index),
-                              (row_index - 1, col_index),
-                              (row_index, col_index + 1))
+            return ascii_line
 
-        # return characters
-        count = share_count(neighbours)
-        is_below = share_count(((row_index, col_index),))
-        is_above = share_count(((row_index - 1, col_index),))
+        def bases_off(row_index):
+            """
+            Parameters:
+                row_index: row_index for hexagon below the base
+            """
+            lines_to_nearest_base = Y_SCALE
+            ascii_line = ""
+            ascii_line += buffer(lines_to_nearest_base) + corner(row_index, -1, 1)
+            # print cols in groups of 2s
+            for col_index in range(1, cols, 2):
+                ascii_line += inside(Y_SCALE, row_index, col_index - 1) + corner(row_index, col_index, 0) + base(row_index, col_index) + corner(row_index, col_index, 1)
+            if cols % 2:
+                ascii_line += inside(Y_SCALE, row_index, cols - 1) + corner(row_index, cols, 0)
+            ascii_line += '\n'
+                
+            return ascii_line
 
-        if not count:
-            return ' '
-        elif count == 1 and (is_below ^ is_above):
-            if is_below:
-                return '.'
-            else:               # is_above
-                return '\''
+        def corner(row_index, col_index, corner_index) -> str:
+            """ Return corner of hexagon in ASCII.
+            
+            Parameters:
+                row_index: row_index for hexagon below corner
+                col_index: col_index for hexagon below corner
+                corner_index: 0 for left, 1 for right
+            """
+            # get neighbour positions, clockwise from (row_index, col_index)
+
+            # unoptimised version: better demonstrates how vector is calculated.
+            # code golf attempt:
+            # neighbours = ((row_index, col_index),
+            #               (row_index - 1, col_index),
+            #               (row_index, col_index + 1))
+            
+            # optimised version: only calculate what we need
+            # incorrect now. Update to match unoptimised version
+            if not col_index % 2:   # even
+                if not corner_index:    # 0
+                    neighbours = ((row_index, col_index),
+                                (row_index - 1, col_index - 1),
+                                (row_index - 1, col_index))
+                                
+                else:                   # 1
+                    neighbours = ((row_index, col_index),
+                                (row_index - 1, col_index),
+                                (row_index - 1, col_index + 1))
+                    
+            else:                   # odd
+                if not corner_index:    # 0
+                    neighbours = ((row_index, col_index),
+                                (row_index, col_index - 1),
+                                (row_index - 1, col_index))
+                                
+                else:                   # 1
+                    neighbours = ((row_index, col_index),
+                                (row_index - 1, col_index),
+                                (row_index, col_index + 1))
+
+            # return characters
+            count = share_count(neighbours)
+            is_below = share_count(((row_index, col_index),))
+            is_above = share_count(((row_index - 1, col_index),))
+
+            if not count:
+                return ' '
+            elif count == 1 and (is_below ^ is_above):
+                if is_below:
+                    return '.'
+                else:               # is_above
+                    return '\''
+            else:
+                if corner_index:    # 1
+                    return '{'
+                else:               # 0
+                    return '}'
+
+        def base(row_index, col_index) -> str:
+            """ Return base of hexagon in ASCII.
+
+            Parameters:
+                row_index: row_index for hexagon below the base
+                col_index: col_index for hexagon
+            """
+            # get neighbour positions, clockwise from (row_index, col_index)
+            neighbours = ((row_index, col_index),
+                        (row_index - 1, col_index))
+
+            # return characters
+            count = share_count(neighbours)
+            if not count:
+                return X_SCALE * ' '
+            return X_SCALE * '-'
+
+
+        if line_index == 0:
+            return bases_on(row_num)
         else:
-            if corner_index:    # 1
-                return '{'
-            else:               # 0
-                return '}'
+            return bases_off(row_num)
 
-    def insides_on(row_index, width_on):
-        """ I think the lines_to_---_base are misnamed. Must check. """
-        lines_to_top_base = Y_SCALE - width_on
-        lines_to_bottom_base = width_on        
 
-        ascii_line = ""
-        ascii_line += buffer(lines_to_bottom_base) + diagonal(row_index, 0, 0)
-        # print cols in groups of 2s
-        for col_index in range(0, cols - 1, 2):
-            ascii_line += inside(lines_to_bottom_base) + diagonal(row_index, col_index, 1) + inside(lines_to_top_base) + diagonal(row_index, col_index + 2, 0)
-        if cols % 2:
-            ascii_line += inside(lines_to_bottom_base) + diagonal(row_index, cols - 1, 1)
-        ascii_line += '\n'
+    def insides(row_num, line_index):
+        def insides_on(row_index, line_index):
+            """ I think the lines_to_---_base are misnamed. Must check. """
+            lines_to_top_base = Y_SCALE - line_index
+            lines_to_bottom_base = line_index        
+
+            ascii_line = ""
+            ascii_line += buffer(lines_to_bottom_base) + diagonal(row_index, 0, 0)
+            # print cols in groups of 2s
+            for col_index in range(0, cols - 1, 2):
+                ascii_line += inside(lines_to_bottom_base) + diagonal(row_index, col_index, 1) + inside(lines_to_top_base) + diagonal(row_index, col_index + 2, 0)
+            if cols % 2:
+                ascii_line += inside(lines_to_bottom_base) + diagonal(row_index, cols - 1, 1)
+            ascii_line += '\n'
+                
+            return ascii_line
+
+        def insides_off(row_index, line_index):
+            """ I think the lines_to_---_base are misnamed. Must check. """
+            lines_to_bottom_base = 2 * Y_SCALE - line_index
+            lines_to_top_base = line_index - Y_SCALE
+
+            ascii_line = ""
+            ascii_line += buffer(lines_to_bottom_base) + diagonal(row_index, -1, 1)
+            # print cols in groups of 2s
+            for col_index in range(1, cols, 2):
+                ascii_line += inside(lines_to_bottom_base) + diagonal(row_index, col_index, 0) + inside(lines_to_top_base) + diagonal(row_index, col_index, 1)
+            if cols % 2:
+                ascii_line += inside(lines_to_bottom_base) + diagonal(row_index, cols, 0)
+            ascii_line += '\n'
+                
+            return ascii_line
+
+        def diagonal(row_index, col_index, diagonal_index) -> str:
+            """ Return diagonal of hexagon in ASCII.
             
-        return ascii_line
-
-    def insides_off(row_index, width_on):
-        """ I think the lines_to_---_base are misnamed. Must check. """
-        lines_to_top_base = Y_SCALE - width_on
-        lines_to_bottom_base = width_on        
-
-        ascii_line = ""
-        ascii_line += buffer(lines_to_bottom_base) + diagonal(row_index, -1, 1)
-        # print cols in groups of 2s
-        for col_index in range(1, cols, 2):
-            ascii_line += inside(lines_to_bottom_base) + diagonal(row_index, col_index, 0) + inside(lines_to_top_base) + diagonal(row_index, col_index, 1)
-        if cols % 2:
-            ascii_line += inside(lines_to_bottom_base) + diagonal(row_index, cols, 0)
-        ascii_line += '\n'
+            Parameters:
+                row_index: row_index for hexagon below diagonal
+                col_index: col_index for hexagon below diagonal
+                diagonal_index: 0 for left, 1 for right
+            """
+            # get neighbour positions, clockwise from (row_index, col_index)
+            if not col_index % 2:   # even
+                if not diagonal_index:  # 0
+                    neighbours = ((row_index, col_index),
+                                (row_index - 1, col_index - 1))
+                                
+                else:                   # 1
+                    neighbours = ((row_index, col_index),
+                                (row_index - 1, col_index + 1))
+                    
+            else:                   # odd
+                if not diagonal_index:  # 0
+                    neighbours = ((row_index, col_index),
+                                (row_index, col_index - 1))
+                                
+                else:                   # 1
+                    neighbours = ((row_index, col_index),
+                                (row_index, col_index + 1))
             
-        return ascii_line
+            # code golf attempt:
+            # neighbours = ((row_index, col_index),
+            #               (row_index, col_index + 1))
 
-        lines_to_top_base = Y_SCALE - width_on
-        lines_to_bottom_base = width_on
-        return buffer(lines_to_bottom_base) + (cols // 2) * (diagonal() + inside(lines_to_bottom_base) + diagonal() + inside(lines_to_top_base)) + diagonal() + (cols % 2) * (inside(lines_to_bottom_base) + diagonal()) + '\n'
+            # return characters
+            count = share_count(neighbours)
+            if not count:
+                return ' '
+            else:
+                if diagonal_index:    # 1
+                    return '\\'
+                else:               # 0
+                    return '/'
 
-    def inside(lines_from_top_base: int, row_index: int = -1, col_index: int = -1) -> str:
+        if line_index < Y_SCALE:
+            return insides_on(row_num, line_index)
+        else:
+            return insides_off(row_num, line_index)
+
+    def inside(line_index: int, row_index: int = -1, col_index: int = -1) -> str:
         """ Return inside line of hexagon in ASCII. 
             lines_below_base is lines below top of this hexagon. """
+
+        def fill(line_index: int, row_index: int, col_index: int) -> str:
+            pass
+
         # lines_to_nearest_base = min(lines_from_top_base, Y_SCALE - )
-        lines_to_nearest_base = lines_from_top_base     # !!!
+        lines_to_nearest_base = line_index     # !!!
         if lines_to_nearest_base == Y_SCALE:
             position = get_position((row_index, col_index))
             if position:
@@ -260,49 +316,6 @@ def grid_to_ascii(map_grid) -> str:
             return tile_id + (X_SCALE + 2 * (lines_to_nearest_base) - 3) * ' '
         return (X_SCALE + 2 * (lines_to_nearest_base)) * ' '
 
-    def fill(lines_from_top_base: int, row_index: int, col_index: int) -> str:
-        pass
-
-    def diagonal(row_index, col_index, diagonal_index) -> str:
-        """ Return diagonal of hexagon in ASCII.
-        
-        Parameters:
-            row_index: row_index for hexagon below diagonal
-            col_index: col_index for hexagon below diagonal
-            diagonal_index: 0 for left, 1 for right
-        """
-        # get neighbour positions, clockwise from (row_index, col_index)
-        if not col_index % 2:   # even
-            if not diagonal_index:  # 0
-                neighbours = ((row_index, col_index),
-                              (row_index - 1, col_index - 1))
-                            
-            else:                   # 1
-                neighbours = ((row_index, col_index),
-                              (row_index - 1, col_index + 1))
-                
-        else:                   # odd
-            if not diagonal_index:  # 0
-                neighbours = ((row_index, col_index),
-                              (row_index, col_index - 1))
-                            
-            else:                   # 1
-                neighbours = ((row_index, col_index),
-                              (row_index, col_index + 1))
-        
-        # code golf attempt:
-        # neighbours = ((row_index, col_index),
-        #               (row_index, col_index + 1))
-
-        # return characters
-        count = share_count(neighbours)
-        if not count:
-            return ' '
-        else:
-            if diagonal_index:    # 1
-                return '\\'
-            else:               # 0
-                return '/'    
 
     def buffer(lines_to_nearest_base: int) -> str:
         """ Return line buffer to align hexagon bases in ASCII. """
@@ -342,12 +355,12 @@ def grid_to_ascii(map_grid) -> str:
 
     map_ascii = ""
     for row_num in range(rows + 1):                         # account for final row in off-columns being lower
-        map_ascii += bases_on(row_num)                      # on-column bases
-        for width_on in range(1, Y_SCALE, 1):
-            map_ascii += insides_on(row_num, width_on)      # insides
-        map_ascii += bases_off(row_num)                     # off-column bases
-        for width_on in range(Y_SCALE - 1, 0, -1):
-            map_ascii += insides_off(row_num, width_on)     # insides
+        map_ascii += bases(row_num, 0)                      # on-column bases
+        for line_index in range(1, Y_SCALE):
+            map_ascii += insides(row_num, line_index)      # insides
+        map_ascii += bases(row_num, Y_SCALE)                     # off-column bases
+        for line_index in range(Y_SCALE + 1, 2 * Y_SCALE):
+            map_ascii += insides(row_num, line_index)     # insides
 
     # !!! remember to pseudo-strip ascii_map
 
