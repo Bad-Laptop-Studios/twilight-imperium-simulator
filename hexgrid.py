@@ -4,12 +4,12 @@ from math import ceil, sqrt
 from components.systems_and_planets import SYSTEMS
 
 MAP_STRING = "1"
-MAP_STRING = "1 2 3 4 5 6 7"
-MAP_STRING = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19"
+# MAP_STRING = "1 2 3 4 5 6 7"
+# MAP_STRING = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19"
 # MAP_STRING = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37"
 # MAP_STRING = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61"
 # or you can use https://keeganw.github.io/ti4
-MAP_STRING = "18 30 26 40 79 38 71 68 48 76 80 69 47 62 25 34 43 37 28 0 61 73 0 50 21 0 45 77 0 29 42 0 23 49 0 20 60"
+# MAP_STRING = "18 30 26 40 79 38 71 68 48 76 80 69 47 62 25 34 43 37 28 0 61 73 0 50 21 0 45 77 0 29 42 0 23 49 0 20 60"
 MAP_LIST = MAP_STRING.split()
 
 def spiral_length_to_rings(spiral_length: int) -> int:
@@ -209,7 +209,7 @@ def grid_to_ascii(map_grid) -> str:
             count = share_count(neighbours)
             if not count:
                 return X_SCALE * ' '
-            return X_SCALE * '-'
+            return X_SCALE * '—'    # em-dash
 
 
         if line_index == 0:
@@ -346,9 +346,9 @@ def grid_to_ascii(map_grid) -> str:
         return value
 
     
-    SCALE = 2
-    X_SCALE = [3, 6, 14, 18, 21][SCALE]
-    Y_SCALE = [2, 3,  6,  8,  9][SCALE]
+    SCALE = 3   # 2
+    X_SCALE = [3, 6, 14, 15, 18, 21][SCALE]
+    Y_SCALE = [2, 3,  6,  7,  8,  9][SCALE]
     # X_SCALE, Y_SCALE = 14, 6
 
     rows, cols = map_grid.shape
