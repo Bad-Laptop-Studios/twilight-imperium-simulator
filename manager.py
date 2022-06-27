@@ -5,7 +5,7 @@
 # planet
 
 
-from map import *
+from map_old import *
 from typing import *
 from components.units import *
 from players import *
