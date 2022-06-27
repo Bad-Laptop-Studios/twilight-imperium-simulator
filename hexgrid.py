@@ -1,6 +1,7 @@
 from functools import cache
 import numpy as np
 from math import ceil, sqrt
+from components.systems_and_planets import SYSTEMS
 
 MAP_STRING = "1"
 MAP_STRING = "1 2 3 4 5 6 7"
@@ -10,14 +11,6 @@ MAP_STRING = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19"
 # or you can use https://keeganw.github.io/ti4
 MAP_STRING = "18 30 26 40 79 38 71 68 48 76 80 69 47 62 25 34 43 37 28 0 61 73 0 50 21 0 45 77 0 29 42 0 23 49 0 20 60"
 MAP_LIST = MAP_STRING.split()
-
-def spiral_length_to_dimensions(spiral_length, r=0) -> int:
-    """ Determine minimum square array dimensions for map. """
-    if spiral_length <= 1:
-        return 1
-    circumference = 3 * r * (r + 1) + 1     # https://oeis.org/A003215
-    return spiral_length_to_dimensions(spiral_length - circumference, r+1) + 2
-
 
 def spiral_length_to_rings(spiral_length: int) -> int:
     """ Return minimum rings for map.
@@ -29,7 +22,8 @@ def spiral_length_to_rings(spiral_length: int) -> int:
     return ceil((sqrt(12 * spiral_length - 3) - 3) / 6)       # rearranged formula from https://oeis.org/A003215 (scroll down for visual)
 
 def ring_to_circumference(ring: int) -> int:
-    """"""
+    """ Return circumference for ring number. 
+    Assumes ring is non-negative. """
     if not ring:
         return 1
     else:
@@ -38,7 +32,6 @@ def ring_to_circumference(ring: int) -> int:
 def add(v1: tuple[int, ...], v2: tuple[int, ...]) -> tuple[int, ...]:
     """ Add tuples elementwise. """
     return map(sum, zip(v1, v2))
-
 
 def spiral_to_grid(map_spiral) -> np.array:
     """ Convert TTS string (tiles in a clockwise hexagonal spiral) to a grid for printing. """
@@ -78,7 +71,8 @@ def spiral_to_grid(map_spiral) -> np.array:
             # j = (side % 3 + 1) % 2 - 2 * (2 <= side <= 3)
             # i = ((ring * (side % 3 == 2) + side_arc) % 2) ** abs(j) - 1 * (side >= 3) - (side == 4)
             # vector = (i, j)
-            # unoptimised version: demonstrates how vector is calculated.
+
+            # unoptimised version: better demonstrates how vector is calculated.
             # see link for how coordinates system works - every 2nd column of hexagons is shifted up half a hexagon to make a grid: https://codegolf.stackexchange.com/questions/70166/draw-and-label-an-ascii-hexagonal-grid
             vector_table = [((RING_MAX + side_arc) % 2, 1), (1, 0), ((RING_MAX + ring + side_arc) % 2, -1), ((RING_MAX + side_arc) % 2 - 1, -1), (-1, 0), ((RING_MAX + ring + side_arc) % 2 - 1, 1)]
             vector = vector_table[side]
@@ -89,24 +83,20 @@ def spiral_to_grid(map_spiral) -> np.array:
     return map_grid
 
 
-def grid_to_ascii(map_grid) -> None:
-    pass
-
-
-def print_map_grid(map_grid) -> None:
+def grid_to_ascii(map_grid) -> str:
     """
-      ,-- corner(0,0,0)
-      |  ,-- base(0,0)
-      v  v
-      .-----.  <-- corner(0,0,1)
-     /       \  
-    {   0,0   }-----.  <-- corner(0,1,1)
-     \       /       \ 
-      }-----{   0,1   }  <-- corner(1,2,0)
-     /       \       /
-    {   1,0   }-----'
-     \       /   ^-- base(1,1)
-      '-----' 
+    Still working on this function set to make it more readable
+                                       ,-- base(0,0)
+                                       v
+                 corner(0,0,0) -->  .-----.  <-- corner(0,0,1)
+              diagonal(0,0,0) -->  /       \  <-- diagonal(0,0,1)
+                                  {   0,0   }-----.  <-- corner(0,1,1)
+                                   \       /       \  <-- diagonal(0,1,1) - all diagonals on the same edge have the same position
+                                    }-----{   0,1   }  <-- corner(1,2,0)
+                                   /       \       /
+                                  {   1,0   }-----'
+                                   \       /   ^-- base(1,1)
+                                    '-----' 
     """
 
     # ---------- components ---------- #
@@ -170,6 +160,15 @@ def print_map_grid(map_grid) -> None:
             corner_index: 0 for left, 1 for right
         """
         # get neighbour positions, clockwise from (row_index, col_index)
+
+        # unoptimised version: better demonstrates how vector is calculated.
+        # code golf attempt:
+        # neighbours = ((row_index, col_index),
+        #               (row_index - 1, col_index),
+        #               (row_index, col_index + 1))
+        
+        # optimised version: only calculate what we need
+        # incorrect now. Update to match unoptimised version
         if not col_index % 2:   # even
             if not corner_index:    # 0
                 neighbours = ((row_index, col_index),
@@ -191,28 +190,19 @@ def print_map_grid(map_grid) -> None:
                 neighbours = ((row_index, col_index),
                               (row_index - 1, col_index),
                               (row_index, col_index + 1))
-        
-        # code golf attempt:
-        # neighbours = ((row_index, col_index),
-        #               (row_index - 1, col_index),
-        #               (row_index, col_index + 1))
 
         # return characters
         count = share_count(neighbours)
         is_below = share_count(((row_index, col_index),))
         is_above = share_count(((row_index - 1, col_index),))
+
         if not count:
             return ' '
-        elif count == 1:
+        elif count == 1 and (is_below ^ is_above):
             if is_below:
                 return '.'
-            elif is_above:
+            else:               # is_above
                 return '\''
-            else:
-                if corner_index:    # 1
-                    return '{'
-                else:               # 0
-                    return '}'
         else:
             if corner_index:    # 1
                 return '{'
@@ -343,17 +333,11 @@ def print_map_grid(map_grid) -> None:
         return value
 
     
+    SCALE = 2
+    X_SCALE = [3, 6, 14, 18, 21][SCALE]
+    Y_SCALE = [2, 3,  6,  8,  9][SCALE]
+    # X_SCALE, Y_SCALE = 14, 6
 
-    X_SCALE = 3
-    Y_SCALE = 2
-    X_SCALE = 6
-    Y_SCALE = 3
-    # X_SCALE = 14    # proper size
-    # Y_SCALE = 6     # proper size
-    # X_SCALE = 18
-    # Y_SCALE = 8
-    # X_SCALE = 21
-    # Y_SCALE = 9
     rows, cols = map_grid.shape
 
     map_ascii = ""
@@ -365,7 +349,7 @@ def print_map_grid(map_grid) -> None:
         for width_on in range(Y_SCALE - 1, 0, -1):
             map_ascii += insides_off(row_num, width_on)     # insides
 
-    # remember to pseudo-strip ascii_map
+    # !!! remember to pseudo-strip ascii_map
 
     return map_ascii
 
@@ -373,7 +357,7 @@ def print_map_grid(map_grid) -> None:
 
 map_grid = spiral_to_grid(MAP_LIST)
 print(map_grid)
-print(print_map_grid(map_grid))
+print(grid_to_ascii(map_grid))
 
 
 
