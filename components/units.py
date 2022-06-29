@@ -2,7 +2,7 @@ import sys
 
 from numpy import delete
 sys.path.insert(0, 'D:/Documents/GitHub/twilight-imperium-simulator')
-
+import typing
 from constants import *
 from players import *
 
@@ -37,7 +37,7 @@ class Unit:
         self._carrying = []
         self._check_for_faction_specific_units(player)
 
-    def _check_for_faction_specific_units(player: Player) -> None:
+    def _check_for_faction_specific_units(self, player: Player) -> None:
         """ If the player's faction has specific units, use them instead. """
         pass
 
@@ -47,24 +47,28 @@ class Unit:
 
     def get_stats(self) -> tuple:
         """ Returns the full unit stats.
-            
+
         Returns:
             cost: int
             combat: int
             move: int
             capacity: int
-            cost_units: int (how many units you can produce for the one cost)
-            combat_burst: int
         """
-        return self._stats + self._cost_units + self._combat_burst
+        return self.STATS_BASE
 
     def get_player_id(self) -> int:
         return self._player
 
-    # def __repr__(self) -> str:
-    #     return f"{self.__class__.__name__}({STATS_BASE})"
+    def __repr__(self) -> str:
+         return f"{self.__class__.__name__}({STATS_BASE})"
+        
     def char(self) -> str:
-        return 'U'
+        """
+        returns a character identifying the unit type and if it has sustained
+        """
+        return '!' * self.has_sustained + 'U'
+
+
 
 # ---------- SHIPS ---------- #
 class Ship(Unit):
@@ -78,6 +82,9 @@ class Carrier(Ship):
 
     def char(self) -> str:
         return 'c'
+
+    def __repr__(self) -> str:
+        return f"Carrier({self._player})"
 
 
 class Cruiser(Ship):
@@ -140,7 +147,7 @@ class PDS(Structure):
     ABILITIES_BASE: Abilities               = 0, 0, 1, 0, 6, 0
     ABILITIES_UPGRADED: Abilities           = 0, 0, 1, 0, 5.0, 0 # properly account for deep space cannon !!! maybe use the planetary shield modifier slot?
     UPGRADE_PREREQUISITES: TechnologyPrerequisites = {'red':1, 'yellow':1}
- 
+
     def char(self) -> str:
         return 'P'
 
