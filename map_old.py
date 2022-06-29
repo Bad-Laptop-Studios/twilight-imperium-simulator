@@ -14,14 +14,19 @@ DEFAULT_MAP = "38 24 31 59 62 37 42 61 21 40 60 79 64 71 49 67 29 26 76 46 34 65
 
 class Map():
     def __init__(self):
+<<<<<<< Updated upstream
         # Map 
         # self.map and self.adjacencies are two different stores for which tile is adjacent to which
         # self.map stores each tile's relation to every other tile
         # self.adjacencies is a dictionary of sets which stores the tile id for every tile a tile is adjacent to
         # self.adjacencies is Riley's prefered type for creating the distance algorithm
+=======
+        # Map
+>>>>>>> Stashed changes
         self.map = []
         self.adjacencies = ADJACENCIES_TEMPLATE
         self.tiles = []
+
 
     def generate_map(self, map_string=DEFAULT_MAP) -> None:
         """
@@ -31,14 +36,14 @@ class Map():
         # and not included in map string
         map_string = "18 " + map_string
         map_string = map_string.split(' ')
-        
+
         size = len(map_string)
 
         # index of wormholes in self.tiles
         alpha_wormhole_pos = []
         beta_wormhole_pos =[]
-        
-        
+
+
         self.map = np.zeros((size, size))
         # index represents position in a spiral outwards from map center
         # see print_map for more details
@@ -52,17 +57,21 @@ class Map():
         for position in range(size):
             id = map_string[position]
             if id != "0":
-                self.tiles.append(System(id, position))
+                system = System(id, position)
+                # for testing purposes
+                system.add_unit(Carrier(0))
+
+                self.tiles.append(system)
 
                 # if tile is a wormhole store it for later
                 if id in ALPHA:
                     alpha_wormhole_pos.append(position)
-                
+
                 elif id in BETA:
                     beta_wormhole_pos.append(position)
-                    
+
             else:
-                # if tile is empty 
+                # if tile is empty
                 self.tiles.append(0)
 
             # Alter adjacency map
@@ -100,6 +109,7 @@ class Map():
         for index in alpha_wormhole_pos:
             for adj_index in alpha_wormhole_pos:
                 if index != adj_index:
+<<<<<<< Updated upstream
                     self.map[index][adj_index] = 2
                     self.map[adj_index][index] = 2
 
@@ -109,6 +119,11 @@ class Map():
                     self.adjacencies[adj_id].add(id)
 
                      
+=======
+                     self.map[index][adj_index] = 2
+                     self.map[adj_index][index] = 2
+
+>>>>>>> Stashed changes
         for index in beta_wormhole_pos:
             for adj_index in beta_wormhole_pos:
                 if index != adj_index:
@@ -141,7 +156,7 @@ class Map():
 
         # Represent moving in a hexagonal circle on our grid
         DIRECTIONS = [(1, 1), (2, 0), (1, -1), (-1, -1), (-2, 0), (-1, 1)]
-        
+
         # start from index 1 tile above center at top hexagon
         y = 6
         x = 4
@@ -167,13 +182,13 @@ class Map():
         # Create list containing base hexagon shape
         # each line corresponds to part of the shape
         # This part of the code is where information about each tile could be added
-        hexagon = []    
+        hexagon = []
         for i in range(height):
             hexagon.append('/' + ' ' * (width+i*2))
 
         for i in range(height-1):
             hexagon.append('\\' + ' ' * (width+(height-i-1)*2))
-            
+
         hexagon.append('\\' + '_' * width)
         hexagon_end = ['\\', '\\', '\\', '/', '/', '/']
         map_list = []
@@ -197,7 +212,7 @@ class Map():
             for line in range(height):
                 output = ''
                 # Hexagon segmenets do not have padding spaces
-                # so each line the first time we print a segement 
+                # so each line the first time we print a segement
                 # we need to add spaces, how many depends on current hexagon
                 # orientation
                 first_fill = 1
@@ -207,7 +222,7 @@ class Map():
                 # the right we need to add it later. Orientation of piece will
                 # depend on current hexagon orientation
                 final_w = -1
-                
+
                 for w in range(9):
                     if filled[h][w]:
                         final_w = w
@@ -215,12 +230,12 @@ class Map():
                             # Hex Bottom
                             output += ' ' * line * first_fill + hexagon[height+line]
                             first_fill = 0
-                                    
+
                         else:
                             # Hex Top
                             output += ' ' * (height-1-line) * first_fill + hexagon[line]
                             first_fill = 0
-                        
+
                     else:
                         # if on a non-filled tile and last tile was filled complete the last tile
                         # add a top to a hexagon if below current position is filled
@@ -229,7 +244,7 @@ class Map():
                                 output += ' ' * height + '_' * width
                             else:
                                 output += ' ' * (height+width)
-                                
+
                         elif final_w + 1 == w:
                             if (w+h) % 2 != 0:
                                 # Hex Bottom
@@ -240,11 +255,11 @@ class Map():
                             else:
                                 # Hex Top
                                 output += ' ' * (height-1-line) * first_fill + hexagon[line]
-                                
+
                         elif line == height-1 and filled[min(h+1,17)][w]:
                             output += ' ' + '_'*width
                             final_w = -2
-                                
+
                     # since tiles are completed by the subsequent tile
                     # in the final column the right of the hexagons will be unfilled
                     # so we fill them
@@ -254,25 +269,34 @@ class Map():
                         if (final_w+h) % 2 != 0:
                             # Hex Bottom
                             output += '/'
-    
+
                         else:
                             # Hex Top
                             output += '\\'
-                map_list.append(output)      
+                map_list.append(output)
         print(filled)
         completed_tiles = []
-        
+
+        # Go through the hex grid and add information about each tile
+
         for i in range(len(map_list)):
             if i % (height) == 1:
                 row = (i-1) // height
                 for u in range(len(filled[row])):
                     if filled[row][u] and filled[row][u] not in completed_tiles:
                         textagon = []
+                        
                         system = self.tiles[int(filled[row][u])]
                         units = system.get_units()
                         units_char = []
+                        type_char = []
                         for unit in units:
-                            units_char.append(unit.get_char())
+                            char = unit.char()
+                            units_char.append(char)
+                            if char not in type_char:
+                                type_char.append(char)
+
+                        print(units_char)
 
                         units_char.sort()
                         count = 0
@@ -281,45 +305,49 @@ class Map():
                             for g in range(len(units_char)):
                                 if units_char[g] == letter:
                                     count += 1
-                                    
+
                                 else:
                                     textagon.append(str(count)+g)
                                     count = 1
                                 letter = units_char[g]
 
                         textagon.append(str(filled[row][u]))
+                        
                         # add wormhole support
                         # add planetsupport
                         activated = system.activated_by()
                         for p in activated:
                             textagon.append(str(p))
 
-                        
+
                         for line in range(height*2):
-                            alter = map_list[i]
+                            if len(textagon) == 0:
+                                break
+                            alter = map_list[i+line]
                             alter1 = alter[:(height+u*(height+width))]
                             alter2 = alter[((u+1)*(width+height)):]
                             middle = ''
                             pop_num = 0
                             for text in textagon:
-                                if len(middle+text)+1 < height:
+                                if len(middle+text)+1 < width:
                                     middle += text + ' '
                                     pop_num += 1
 
                             for k in range(pop_num):
                                 textagon.pop(0)
-                                               
 
-                            
+
+
                             offset = width-len(middle)
                             for t in range(offset):
                                 if t < (offset/2):
                                     middle = ' ' + middle
                                 else:
                                     middle += ' '
-                            map_list[i] = alter1 + middle + alter2
+                            map_list[i+line] = alter1 + middle + alter2
+                        completed_tiles.append(filled[row][u])
 
-                        
+
             print(i, map_list[i])
 
     def get_map(self):
@@ -373,6 +401,11 @@ if map_input != '':
 else:
     maps.generate_map()
 
+<<<<<<< Updated upstream
 # maps.print_map(14, 5)
 
 print(maps.get_distance(1, 3))
+=======
+maps.print_map(14, 5)
+i = input("quit? ")
+>>>>>>> Stashed changes
