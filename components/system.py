@@ -75,18 +75,23 @@ class System():
         """ Removes all players from the activated list. """
         self.activated = []
 
-    def add_unit(self, unit: Unit):
+    def add_unit(self, unit_type: Unit, number: int = 1):
         """
         Add a unit to the units dictionary
         """
-        if unit in self.units:
-            self.units[unit] += 1
+        if unit_type in self.units:
+            self.units[unit] += number
 
         else:
-            self.units[unit] = 1
+            self.units[unit_type] = 1
 
-    def remove_unit(self, index: int) -> None:
-        self.units.pop(index)
+    def remove_unit(self, unit_type: Unit, number: int) -> None:
+        """
+        Remove a number of units from the system
+        """
+        self.units[unit_type] -= number
+        if self.units[unit_type] <= 0:
+            del self.units[unit_type]
 
 
     #Return Functions

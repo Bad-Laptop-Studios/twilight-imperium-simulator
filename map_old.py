@@ -10,7 +10,7 @@ from components.systems_and_planets import *
 from typing import *
 np.set_printoptions(threshold=np.inf)
 # 0 represents there being no tile
-DEFAULT_MAP = "38 24 31 59 62 37 42 61 21 40 60 79 64 71 49 67 29 26 76 46 34 65 30 35 77 69 70 68 20 27 43 33 74 41 72 22 0 19 63 0 48 45 0 39 44 0 50 28 0 47 25 0 36 32 0 78 23 0 73 66"
+DEFAULT_MAP = "41 71 62 67 75 38 47 40 37 25 27 50 72 66 78 68 74 39 60 32 0 44 23 30 0 59 61 0 26 79 0 21 63 73 0 20"
 
 class Map():
     def __init__(self):
@@ -31,6 +31,8 @@ class Map():
         """
         # Mecatol Rex always at center of board
         # and not included in map string
+
+        # Map string: index is tile position, value is tile type 
         map_string = "18 " + map_string
         map_string = map_string.split(' ')
 
@@ -52,6 +54,7 @@ class Map():
         # add it to self.tiles
         # also add which tiles it is adjacent too into self.map and self.adjacencies
         for position in range(size):
+            # id is tile type
             id = map_string[position]
             if id != "0":
                 system = System(id, position)
@@ -74,14 +77,14 @@ class Map():
             # Alter adjacency map
             if id != "0":
                 if id not in HYPERLANES:
+                    # For each adjacent tile
                     for adj_position in ADJACENCY_DATA[str(position)]:
                         if adj_position < size and map_string[adj_position] not in HYPERLANES and map_string[adj_position] != "0":
                             self.map[position][adj_position] = 1
                             self.map[adj_position][position] = 1
 
                             adj_id = map_string[adj_position]
-                            self.adjacencies[id].add(adj_id)
-                            self.adjacencies[adj_id].add(id)
+                            self.adjacencies[str(position)].add(adj_position)
                 else:
                     hyperlanes = SYSTEMS[id]["hyperlanes"]
                     # A Hyperlane consists of two variables representing which faces
@@ -93,11 +96,10 @@ class Map():
                         end = ADJACENCY_DATA[str(position)][hyperlane[1]]
                         self.map[start][end] = 1
                         self.map[end][start] = 1
-
-                        start_id = map_string[start]
-                        end_id = map_string[end]
-                        self.adjacencies[start_id].add(end_id)
-                        self.adjacencies[end_id].add(start_id)
+                        
+                        self.adjacencies[str(start_id)].add(end_id)
+                        self.adjacencies[str(end_id)].add(start_id)
+        print(self.adjacencies)
 
 
 
@@ -258,8 +260,9 @@ class Map():
         completed_tiles = []
 
         # Go through the hex grid and add information about each tile
-
+        # Probably really inefficient
         for i in range(len(map_list)):
+            #For every hexagon find text need
             if i % (height) == 1:
                 row = (i-1) // height
                 for u in range(len(filled[row])):
@@ -282,13 +285,19 @@ class Map():
                         for p in activated:
                             textagon.append(str(p))
 
-
+                        # Loops through each line of that makes up the hexagon and prints centered text so that it fits within the hexagon
                         for line in range(height*2):
                             if len(textagon) == 0:
                                 break
+                            # alter is original line
                             alter = map_list[i+line]
+                            # alter1 is everything to the left of the hexagon
+                            # alter 2 is everything to the right of the hexagon
+                            # this results in alter1+alter2 being everything in alter except for the spaces inside the hexagon
                             alter1 = alter[:(height+u*(height+width))]
                             alter2 = alter[((u+1)*(width+height)):]
+
+                            #
                             middle = ''
                             pop_num = 0
                             for text in textagon:
@@ -300,7 +309,7 @@ class Map():
                                 textagon.pop(0)
 
 
-
+                            # Adds centered text to the hexagon
                             offset = width-len(middle)
                             for t in range(offset):
                                 if t < (offset/2):
@@ -351,6 +360,16 @@ class Map():
                 for adjacent_tile in self.adjacencies[tile]:
                     queue.append((adjacent_tile, distance+1))
 
+    def is_adjacent(self, system1_id: int, system2_id: int) -> bool:
+        """
+        Returns whether system1 is adjacent to system 2
+        """
+        if system2_id in self.adjacencies[str(system1_id)]:
+            return True
+
+        return False
+        
+
 
 
 
@@ -365,5 +384,4 @@ else:
     maps.generate_map()
 
 maps.print_map(14, 5)
-i = input("quit? ")
 

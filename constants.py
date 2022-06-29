@@ -90,6 +90,7 @@ ADJACENCY_DATA = {
 
 # Not sure if this should be here - it is the template used for self.adjacencies in map_old.py
 ADJACENCIES_TEMPLATE = {
+    "0": set(),
     "1": set(),
     "2": set(),
     "3": set(),

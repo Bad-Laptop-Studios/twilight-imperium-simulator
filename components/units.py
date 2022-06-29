@@ -53,24 +53,22 @@ class Unit:
             combat: int
             move: int
             capacity: int
-            cost_units: int (how many units you can produce for the one cost)
-            combat_burst: int
         """
-        return self._stats + self._cost_units + self._combat_burst
+        return self.STATS_BASE
 
     def get_player_id(self) -> int:
         return self._player
 
-    # def __repr__(self) -> str:
-    #     return f"{self.__class__.__name__}({STATS_BASE})"
+    def __repr__(self) -> str:
+         return f"{self.__class__.__name__}({STATS_BASE})"
+        
     def char(self) -> str:
         """
         returns a character identifying the unit type and if it has sustained
         """
         return '!' * self.has_sustained + 'U'
 
-    def __repr__(self) -> str:
-        return f"Unit({self.player})"
+
 
 # ---------- SHIPS ---------- #
 class Ship(Unit):
