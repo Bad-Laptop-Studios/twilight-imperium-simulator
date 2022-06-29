@@ -4,10 +4,10 @@ from math import ceil, sqrt
 from components.systems_and_planets import SYSTEMS
 
 MAP_STRING = "1"
-# MAP_STRING = "1 2 3 4 5 6 7"
-# MAP_STRING = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19"
-# MAP_STRING = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37"
-# MAP_STRING = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61"
+MAP_STRING = "1 2 3 4 5 6 7"
+MAP_STRING = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19"
+MAP_STRING = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37"
+MAP_STRING = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61"
 # or you can use https://keeganw.github.io/ti4
 # MAP_STRING = "18 30 26 40 79 38 71 68 48 76 80 69 47 62 25 34 43 37 28 0 61 73 0 50 21 0 45 77 0 29 42 0 23 49 0 20 60"
 MAP_LIST = MAP_STRING.split()
@@ -144,47 +144,23 @@ def grid_to_ascii(map_grid) -> str:
                 col_index: col_index for hexagon below corner
                 corner_index: 0 for left, 1 for right
             """
-            # get neighbour positions, clockwise from (row_index, col_index)
+            # get neighbour positions, rotating initially upwards from (row_index, col_index)
 
-            # unoptimised version: better demonstrates how vector is calculated.
-            # code golf attempt:
-            # neighbours = ((row_index, col_index),
-            #               (row_index - 1, col_index),
-            #               (row_index, col_index + 1))
-            
             # optimised version: only calculate what we need
-            # incorrect now. Update to match unoptimised version
-            if not col_index % 2:   # even
-                if not corner_index:    # 0
-                    neighbours = ((row_index, col_index),
-                                (row_index - 1, col_index - 1),
-                                (row_index - 1, col_index))
-                                
-                else:                   # 1
-                    neighbours = ((row_index, col_index),
-                                (row_index - 1, col_index),
-                                (row_index - 1, col_index + 1))
-                    
-            else:                   # odd
-                if not corner_index:    # 0
-                    neighbours = ((row_index, col_index),
-                                (row_index, col_index - 1),
-                                (row_index - 1, col_index))
-                                
-                else:                   # 1
-                    neighbours = ((row_index, col_index),
-                                (row_index - 1, col_index),
-                                (row_index, col_index + 1))
-
+            neighbours = ((row_index, col_index),
+                          (row_index - 1, col_index),
+                          (row_index - (not col_index % 2), col_index + 2 * corner_index - 1))
+            
             # return characters
             count = share_count(neighbours)
-            is_below = share_count(((row_index, col_index),))
-            is_above = share_count(((row_index - 1, col_index),))
+
+            is_below = share_count((neighbours[0],))
+            is_above = share_count((neighbours[1],))
 
             if not count:
                 return ' '
             elif count == 1 and (is_below ^ is_above):
-                if is_below:
+                if is_below:        # is_below
                     return '.'
                 else:               # is_above
                     return '\''
@@ -346,7 +322,7 @@ def grid_to_ascii(map_grid) -> str:
         return value
 
     
-    SCALE = 3   # 2
+    SCALE = 1   # 2
     X_SCALE = [3, 6, 14, 15, 18, 21][SCALE]
     Y_SCALE = [2, 3,  6,  7,  8,  9][SCALE]
     # X_SCALE, Y_SCALE = 14, 6
