@@ -24,7 +24,9 @@ class System():
             self.add_planet(Planet(system_id, i))
         self.has_frontier_token = False
 
-        self.units = []
+
+        # Store units in system as a dictionary
+        self.units = {}
         
     def _determine_anomalies(self, system_id: int) -> List[str]:
         anomalies = []
@@ -74,7 +76,14 @@ class System():
         self.activated = []
 
     def add_unit(self, unit: Unit):
-        self.units.append(unit)
+        """
+        Add a unit to the units dictionary
+        """
+        if unit in self.units:
+            self.units[unit] += 1
+
+        else:
+            self.units[unit] = 1
 
     def remove_unit(self, index: int) -> None:
         self.units.pop(index)
@@ -85,7 +94,7 @@ class System():
         return self.id
     def get_system_id(self) -> str:
         return self.system_id
-    def get_units(self) -> List[Unit]:
+    def get_units(self) -> Dict:
         return self.units.copy()
     def get_anomalies(self) -> List[str]:
         return self.anomalies

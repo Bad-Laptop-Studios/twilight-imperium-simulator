@@ -64,7 +64,10 @@ class Unit:
     # def __repr__(self) -> str:
     #     return f"{self.__class__.__name__}({STATS_BASE})"
     def char(self) -> str:
-        return 'U'
+        """
+        returns a character identifying the unit type and if it has sustained
+        """
+        return '!' * self.has_sustained + 'U'
 
     def __repr__(self) -> str:
         return f"Unit({self.player})"

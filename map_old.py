@@ -14,15 +14,12 @@ DEFAULT_MAP = "38 24 31 59 62 37 42 61 21 40 60 79 64 71 49 67 29 26 76 46 34 65
 
 class Map():
     def __init__(self):
-<<<<<<< Updated upstream
         # Map 
         # self.map and self.adjacencies are two different stores for which tile is adjacent to which
         # self.map stores each tile's relation to every other tile
         # self.adjacencies is a dictionary of sets which stores the tile id for every tile a tile is adjacent to
         # self.adjacencies is Riley's prefered type for creating the distance algorithm
-=======
-        # Map
->>>>>>> Stashed changes
+
         self.map = []
         self.adjacencies = ADJACENCIES_TEMPLATE
         self.tiles = []
@@ -109,7 +106,6 @@ class Map():
         for index in alpha_wormhole_pos:
             for adj_index in alpha_wormhole_pos:
                 if index != adj_index:
-<<<<<<< Updated upstream
                     self.map[index][adj_index] = 2
                     self.map[adj_index][index] = 2
 
@@ -118,22 +114,6 @@ class Map():
                     self.adjacencies[id].add(adj_id)
                     self.adjacencies[adj_id].add(id)
 
-                     
-=======
-                     self.map[index][adj_index] = 2
-                     self.map[adj_index][index] = 2
-
->>>>>>> Stashed changes
-        for index in beta_wormhole_pos:
-            for adj_index in beta_wormhole_pos:
-                if index != adj_index:
-                    self.map[index][adj_index] = 2
-                    self.map[adj_index][index] = 2
-                    
-                    id = map_string[index]
-                    adj_id = map_string[adj_index]
-                    self.adjacencies[id].add(adj_id)
-                    self.adjacencies[adj_id].add(id)
 
     def print_map(self, width: int, height:int):
         """
@@ -288,28 +268,11 @@ class Map():
                         
                         system = self.tiles[int(filled[row][u])]
                         units = system.get_units()
-                        units_char = []
-                        type_char = []
+                        # Put the unit type and number into the system
                         for unit in units:
-                            char = unit.char()
-                            units_char.append(char)
-                            if char not in type_char:
-                                type_char.append(char)
+                            textagon.append(unit.char() + str(units[unit]))
 
-                        print(units_char)
 
-                        units_char.sort()
-                        count = 0
-                        if len(units_char) > 0:
-                            letter = units_char[0]
-                            for g in range(len(units_char)):
-                                if units_char[g] == letter:
-                                    count += 1
-
-                                else:
-                                    textagon.append(str(count)+g)
-                                    count = 1
-                                letter = units_char[g]
 
                         textagon.append(str(filled[row][u]))
                         
@@ -401,11 +364,6 @@ if map_input != '':
 else:
     maps.generate_map()
 
-<<<<<<< Updated upstream
-# maps.print_map(14, 5)
-
-print(maps.get_distance(1, 3))
-=======
 maps.print_map(14, 5)
 i = input("quit? ")
->>>>>>> Stashed changes
+
