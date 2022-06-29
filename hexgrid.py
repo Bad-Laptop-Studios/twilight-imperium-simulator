@@ -100,7 +100,21 @@ def grid_to_ascii(map_grid) -> str:
     """
 
     # ---------- components ---------- #
-    def bases(row_num, line_index):
+    def bases(row_index, line_index):
+        """"""
+        # lines_to_nearest_base = line_index
+        # ascii_line = ""
+        # parity = bool(lines_to_nearest_base)
+
+        # # add cols in groups of 2
+        # ascii_line += buffer(lines_to_nearest_base) + corner(row_index, -parity, parity)
+        # for col_index in range(parity, cols - 1 + parity, 2):
+        #     ascii_line += inside(Y_SCALE, row_index, col_index - 1) + corner(row_index, col_index, not parity) + base(row_index, col_index) + corner(row_index, col_index - 2 * parity + 2, parity)
+        # if cols % 2:
+        #     ascii_line += inside(Y_SCALE, row_index, cols - 1) + corner(row_index, cols, 0)
+        # ascii_line += '\n'
+            
+        # return ascii_line
 
         def bases_on(row_index):
             """
@@ -145,30 +159,24 @@ def grid_to_ascii(map_grid) -> str:
                 corner_index: 0 for left, 1 for right
             """
             # get neighbour positions, rotating initially upwards from (row_index, col_index)
-
             # optimised version: only calculate what we need
             neighbours = ((row_index, col_index),
                           (row_index - 1, col_index),
                           (row_index - (not col_index % 2), col_index + 2 * corner_index - 1))
             
-            # return characters
+            # determine where which neighbours are present
             count = share_count(neighbours)
-
             is_below = share_count((neighbours[0],))
             is_above = share_count((neighbours[1],))
 
-            if not count:
-                return ' '
+            # return characters
+            if not count: return ' '
             elif count == 1 and (is_below ^ is_above):
-                if is_below:        # is_below
-                    return '.'
-                else:               # is_above
-                    return '\''
+                if is_below: return '.'         # is_below
+                else: return '\''               # is_above
             else:
-                if corner_index:    # 1
-                    return '{'
-                else:               # 0
-                    return '}'
+                if corner_index: return '{'     # 1
+                else: return '}'                # 0
 
         def base(row_index, col_index) -> str:
             """ Return base of hexagon in ASCII.
@@ -177,21 +185,23 @@ def grid_to_ascii(map_grid) -> str:
                 row_index: row_index for hexagon below the base
                 col_index: col_index for hexagon
             """
-            # get neighbour positions, clockwise from (row_index, col_index)
+            # get neighbour positions, starting with (row_index, col_index)
             neighbours = ((row_index, col_index),
-                        (row_index - 1, col_index))
+                          (row_index - 1, col_index))
+
+            # determine where which neighbours are present
+            count = share_count(neighbours)
 
             # return characters
-            count = share_count(neighbours)
             if not count:
                 return X_SCALE * ' '
             return X_SCALE * '—'    # em-dash
 
 
         if line_index == 0:
-            return bases_on(row_num)
+            return bases_on(row_index)
         else:
-            return bases_off(row_num)
+            return bases_off(row_index)
 
 
     def insides(row_num, line_index):
@@ -286,7 +296,7 @@ def grid_to_ascii(map_grid) -> str:
             position = get_position((row_index, col_index))
             if position:
                 tile_id = map_grid[row_index][col_index].ljust(3)
-                print(tile_id)
+                # print(tile_id)
             else:
                 tile_id = 3 * ' '
             return tile_id + (X_SCALE + 2 * (lines_to_nearest_base) - 3) * ' '
