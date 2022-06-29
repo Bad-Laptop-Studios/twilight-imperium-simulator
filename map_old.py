@@ -9,12 +9,18 @@ from constants import *
 from components.systems_and_planets import *
 from typing import *
 np.set_printoptions(threshold=np.inf)
+# 0 represents there being no tile
 DEFAULT_MAP = "38 24 31 59 62 37 42 61 21 40 60 79 64 71 49 67 29 26 76 46 34 65 30 35 77 69 70 68 20 27 43 33 74 41 72 22 0 19 63 0 48 45 0 39 44 0 50 28 0 47 25 0 36 32 0 78 23 0 73 66"
 
 class Map():
     def __init__(self):
         # Map 
+        # self.map and self.adjacencies are two different stores for which tile is adjacent to which
+        # self.map stores each tile's relation to every other tile
+        # self.adjacencies is a dictionary of sets which stores the tile id for every tile a tile is adjacent to
+        # self.adjacencies is Riley's prefered type for creating the distance algorithm
         self.map = []
+        self.adjacencies = ADJACENCIES_TEMPLATE
         self.tiles = []
 
     def generate_map(self, map_string=DEFAULT_MAP) -> None:
@@ -42,8 +48,8 @@ class Map():
 
         # For every number in map_string turn it into a tile and
         # add it to self.tiles
-        # also add which tiles it is adjacent too into self.map
-        for position in range(len(map_string)):
+        # also add which tiles it is adjacent too into self.map and self.adjacencies
+        for position in range(size):
             id = map_string[position]
             if id != "0":
                 self.tiles.append(System(id, position))
@@ -60,36 +66,59 @@ class Map():
                 self.tiles.append(0)
 
             # Alter adjacency map
-            if id not in HYPERLANES:
-                for adj_position in ADJACENCY_DATA[str(position)]:
-                    if adj_position < size:
-                        self.map[position][adj_position] = 1
-                        self.map[adj_position][position] = 1
-            else:
-                hyperlanes = SYSTEMS[id]["hyperlanes"]
-                # A Hyperlane consists of two variables representing which faces
-                # are connected
-                # Finds systems that connected to the hyperlane and makes them
-                # adjacent
-                for hyperlane in hyperlanes:
-                    start = ADJACENCY_DATA[str(position)][hyperlane[0]]
-                    end = ADJACENCY_DATA[str(position)][hyperlane[1]]
-                    self.map[start][end] = 1
-                    self.map[end][start] = 1
+            if id != "0":
+                if id not in HYPERLANES:
+                    for adj_position in ADJACENCY_DATA[str(position)]:
+                        if adj_position < size and map_string[adj_position] not in HYPERLANES and map_string[adj_position] != "0":
+                            self.map[position][adj_position] = 1
+                            self.map[adj_position][position] = 1
+
+                            adj_id = map_string[adj_position]
+                            self.adjacencies[id].add(adj_id)
+                            self.adjacencies[adj_id].add(id)
+                else:
+                    hyperlanes = SYSTEMS[id]["hyperlanes"]
+                    # A Hyperlane consists of two variables representing which faces
+                    # are connected
+                    # Finds systems that connected to the hyperlane and makes them
+                    # adjacent
+                    for hyperlane in hyperlanes:
+                        start = ADJACENCY_DATA[str(position)][hyperlane[0]]
+                        end = ADJACENCY_DATA[str(position)][hyperlane[1]]
+                        self.map[start][end] = 1
+                        self.map[end][start] = 1
+
+                        start_id = map_string[start]
+                        end_id = map_string[end]
+                        self.adjacencies[start_id].add(end_id)
+                        self.adjacencies[end_id].add(start_id)
+
+
 
         # index is what index the wormholes are at in self.tiles
         # for each wormhole set it to be adjacent to the others
         for index in alpha_wormhole_pos:
             for adj_index in alpha_wormhole_pos:
                 if index != adj_index:
-                     self.map[index][adj_index] = 2
-                     self.map[adj_index][index] = 2
+                    self.map[index][adj_index] = 2
+                    self.map[adj_index][index] = 2
+
+                    id = map_string[index]
+                    adj_id = map_string[adj_index]
+                    self.adjacencies[id].add(adj_id)
+                    self.adjacencies[adj_id].add(id)
+
                      
         for index in beta_wormhole_pos:
             for adj_index in beta_wormhole_pos:
                 if index != adj_index:
-                     self.map[index][adj_index] = 2
-                     self.map[adj_index][index] = 2
+                    self.map[index][adj_index] = 2
+                    self.map[adj_index][index] = 2
+                    
+                    id = map_string[index]
+                    adj_id = map_string[adj_index]
+                    self.adjacencies[id].add(adj_id)
+                    self.adjacencies[adj_id].add(id)
 
     def print_map(self, width: int, height:int):
         """
@@ -307,6 +336,34 @@ class Map():
         """
         return self.tiles
 
+    def get_distance(self, origin: int, destination: int):
+        # Takes the ids of the origin and destination tiles and returns the shortest distance
+
+        # Currently does not account for:
+        # gravity rifts
+        # other anomolies which inhibit movement
+        # other players' ships which inhibit movement
+        # the argent flight's tech which inhibits movement
+        visited = VISITED_TEMPLATE
+        queue = [(str(origin), 0)]
+
+        while True:
+            tile = queue[0][0]
+            distance = queue[0][1]
+            queue.pop(0)
+
+            if tile == str(destination):
+                return distance
+
+            if not visited[tile]:
+                visited[tile] = True
+                for adjacent_tile in self.adjacencies[tile]:
+                    queue.append((adjacent_tile, distance+1))
+
+
+
+
+
 #Testing
 maps = Map()
 #https://keeganw.github.io/ti4
@@ -316,4 +373,6 @@ if map_input != '':
 else:
     maps.generate_map()
 
-maps.print_map(14, 5)
+# maps.print_map(14, 5)
+
+print(maps.get_distance(1, 3))
