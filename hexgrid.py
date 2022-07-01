@@ -243,7 +243,8 @@ def grid_to_ascii(map_grid) -> str:
         if line_index == Y_SCALE:
             position = get_position((row_index, col_index))
             if position:
-                tile_id = map_grid[*position].ljust(3)
+                # tile_id = map_grid[*position].ljust(3)
+                tile_id = map_grid[row_index, col_index].ljust(3)
             else:
                 tile_id = 3 * ' '
             return tile_id + (X_SCALE + 2 * (lines_to_nearest_base) - 3) * ' '
@@ -269,7 +270,8 @@ def grid_to_ascii(map_grid) -> str:
         x, y = position
         if not 0 <= x < rows or not 0 <= y < cols:
             return None
-        value = map_grid[x][y]
+        # value = map_grid[*position]
+        value = map_grid[x, y]
         if value in ["-1", "0"]:
             return None
         return value
