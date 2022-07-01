@@ -1,10 +1,14 @@
 """ Module to manage hexagon and grid representations of the map. """
 
+
 from functools import cache
+from tkinter import Y
 from typing import Literal
 import numpy as np
 from math import ceil, sqrt
 from components.systems_and_planets import SYSTEMS
+
+TileID = str
 
 MAP_STRING = "1"
 MAP_STRING = "1 2 3 4 5 6 7"
@@ -40,7 +44,6 @@ def spiral_to_grid(map_spiral) -> np.array:
     """ Convert TTS string (tiles in a clockwise hexagonal spiral) to a grid for printing. """
     RING_MAX = spiral_length_to_rings(len(map_spiral))
     array_size = 2 * RING_MAX + 1
-    # map_grid = -np.ones((array_size, array_size))
     map_grid = np.full((array_size, array_size), "-1", dtype=object)
 
     centre = array_size // 2
@@ -88,7 +91,6 @@ def spiral_to_grid(map_spiral) -> np.array:
 
 def grid_to_ascii(map_grid) -> str:
     """
-    Still working on this function set to make it more readable
                                        ,-- base(0,0)
                                        v
                  corner(0,0,0) -->  .-----.  <-- corner(0,0,1)
@@ -100,45 +102,15 @@ def grid_to_ascii(map_grid) -> str:
                                   {   1,0   }-----'
                                    \       /   ^-- base(1,1)
                                     '-----' 
+
+    TODO:
+        Change inside() argument order to row_index, col_index, line_index
+        (Maybe) Rename corner_index and diagonal_index to corner_parity and diagonal_parity
     """
 
     # ---------- components ---------- #
     def bases(row_index, line_index):
         """"""
-        # def bases_on(row_index):
-        #     """
-        #     Parameters:
-        #         row_index: row_index for hexagon below the base
-        #     """
-        #     lines_to_nearest_base = 0
-        #     ascii_line = ""
-        #     # print cols in groups of 2s
-        #     ascii_line += buffer(lines_to_nearest_base) + corner(row_index, 0, 0)
-        #     for col_index in range(0, cols - 1, 2):
-        #         ascii_line += base(row_index, col_index) + corner(row_index, col_index, 1) + inside(Y_SCALE, row_index - 1, col_index + 1) + corner(row_index, col_index + 2, 0)
-        #     if cols % 2:
-        #         ascii_line += base(row_index, cols - 1) + corner(row_index, cols - 1, 1)
-        #     ascii_line += '\n'
-                
-        #     return ascii_line
-
-        # def bases_off(row_index):
-        #     """
-        #     Parameters:
-        #         row_index: row_index for hexagon below the base
-        #     """
-        #     lines_to_nearest_base = Y_SCALE
-        #     ascii_line = ""
-        #     ascii_line += buffer(lines_to_nearest_base) + corner(row_index, -1, 1)
-        #     # print cols in groups of 2s
-        #     for col_index in range(1, cols, 2):
-        #         ascii_line += inside(Y_SCALE, row_index, col_index - 1) + corner(row_index, col_index, 0) + base(row_index, col_index) + corner(row_index, col_index, 1)
-        #     if cols % 2:
-        #         ascii_line += inside(Y_SCALE, row_index, cols - 1) + corner(row_index, cols, 0)
-        #     ascii_line += '\n'
-                
-        #     return ascii_line
-
         def corner(row_index, col_index, corner_index) -> str:
             """ Return corner of hexagon in ASCII.
             
@@ -185,15 +157,21 @@ def grid_to_ascii(map_grid) -> str:
             return X_SCALE * '—'  # em-dash
 
 
-        lines_to_nearest_base = line_index
-        ascii_line = ""
-        parity = bool(lines_to_nearest_base)
+        # parity describes whether the first column started with a hexagon base (0) or inside (1)
+        parity = bool(line_index)
 
-        ascii_line += buffer(lines_to_nearest_base) + corner(row_index, -parity, parity)
+        # Demonstration for algorithm below. Here, X_SCALE = 3, Y_SCALE = 2
+        # 0 parity: ascii_line = "  ."              + cols // 2 * "———{       }" + "———."
+        # 1 parity: ascii_line = "{"   + "       }" + cols // 2 * "———{       }"
+
+        ascii_line = buffer(line_index) + corner(row_index, -parity, parity)
+        # add a hexagon inside that advances by one column to align with the hexagon bases
         if parity:
             ascii_line += inside(Y_SCALE, row_index, 0) + corner(row_index, 1, 0)
+        # add aligned columns in groups of two
         for col_index in range(parity, cols - 1, 2):
             ascii_line += base(row_index, col_index) + corner(row_index, col_index, 1) + inside(Y_SCALE, row_index - 1 + parity, col_index + 1) + corner(row_index, col_index + 2, 0)
+        # add a hexagon base that advances by one column to align with the hexagon insides
         if not parity:
             ascii_line += base(row_index, cols - 1) + corner(row_index, cols - 1, 1)
         ascii_line += '\n'
@@ -201,66 +179,8 @@ def grid_to_ascii(map_grid) -> str:
         return ascii_line
 
 
-
-
-        # temporary
-        # if line_index == 0:
-        #     return bases_on(row_index)
-        # else:
-        #     return bases_off(row_index)
-
-
     def insides(row_index, line_index):
         """"""
-        # parity = line_index < Y_SCALE
-        # lines_to_bottom_base = 2 * Y_SCALE - line_index
-        # lines_to_top_base = line_index - Y_SCALE
-        
-
-        # ascii_line = ""
-        # ascii_line += buffer(lines_to_bottom_base) + diagonal(row_index, -1, 1)
-        # # print cols in groups of 2s
-        # for col_index in range(1, cols, 2):
-        #     ascii_line += inside(lines_to_bottom_base) + diagonal(row_index, col_index, 0) + inside(lines_to_top_base) + diagonal(row_index, col_index, 1)
-        # if cols % 2:
-        #     ascii_line += inside(lines_to_bottom_base) + diagonal(row_index, cols, 0)
-        # ascii_line += '\n'
-            
-        # return ascii_line
-
-
-        def insides_on(row_index, line_index):
-            """ I think the lines_to_---_base are misnamed. Must check. """
-            lines_to_top_base = Y_SCALE - line_index
-            lines_to_bottom_base = line_index        
-
-            ascii_line = ""
-            ascii_line += buffer(lines_to_bottom_base) + diagonal(row_index, 0, 0)
-            # print cols in groups of 2s
-            for col_index in range(0, cols - 1, 2):
-                ascii_line += inside(lines_to_bottom_base) + diagonal(row_index, col_index, 1) + inside(lines_to_top_base) + diagonal(row_index, col_index + 2, 0)
-            if cols % 2:
-                ascii_line += inside(lines_to_bottom_base) + diagonal(row_index, cols - 1, 1)
-            ascii_line += '\n'
-                
-            return ascii_line
-
-        def insides_off(row_index, line_index):
-            """ I think the lines_to_---_base are misnamed. Must check. """
-            lines_to_bottom_base = 2 * Y_SCALE - line_index
-            lines_to_top_base = line_index - Y_SCALE
-
-            ascii_line = ""
-            ascii_line += buffer(lines_to_bottom_base) + diagonal(row_index, -1, 1)
-            # print cols in groups of 2s
-            for col_index in range(1, cols, 2):
-                ascii_line += inside(lines_to_bottom_base) + diagonal(row_index, col_index, 0) + inside(lines_to_top_base) + diagonal(row_index, col_index, 1)
-            if cols % 2:
-                ascii_line += inside(lines_to_bottom_base) + diagonal(row_index, cols, 0)
-            ascii_line += '\n'
-                
-            return ascii_line
-
         def diagonal(row_index: int, col_index: int, diagonal_index: Literal[0, 1]) -> str:
             """ Return diagonal of hexagon in ASCII.
             
@@ -282,52 +202,70 @@ def grid_to_ascii(map_grid) -> str:
                 return ' '
             return '\\' if diagonal_index else '/'
 
-        # temporary
-        if line_index < Y_SCALE:
-            return insides_on(row_index, line_index)
-        else:
-            return insides_off(row_index, line_index)
+
+        # line_index parity describes whether the first column started with a hexagon top (0) or bottom (1) half
+        parity = line_index >= Y_SCALE
+        # lines_to_top/bottom_base describe the first column
+        lines_to_top_base = line_index - parity * Y_SCALE
+        lines_to_bottom_base = line_index + (not parity) * Y_SCALE
+
+        # Demonstration for algorithm below. Here, X_SCALE = 3, Y_SCALE = 2
+        # 0 parity: ascii_line = " /"            + cols // 2 * "     \     /" + "     \"
+        # 1 parity: ascii_line = " \" + "     /" + cols // 2 * "     \     /"
+
+        ascii_line = buffer(line_index) + diagonal(row_index, -parity, parity)
+        # add a lower hexagon half that advances by one column to align with the upper hexagon halves
+        if parity:
+            ascii_line += inside(line_index, row_index, 0) + diagonal(row_index, 1, 0)
+        # add aligned columns in groups of two
+        for col_index in range(parity, cols - 1, 2):
+            ascii_line += inside(lines_to_top_base, row_index, col_index) + diagonal(row_index, col_index, 1) + inside(lines_to_bottom_base, row_index - 1, col_index + 1) + diagonal(row_index, col_index + 2, 0)
+        # add an upper hexagon half that advances by one column to align with the lower hexagon halves
+        if not parity:
+            ascii_line += inside(line_index, row_index, col_index) + diagonal(row_index, cols - 1, 1)
+        ascii_line += '\n'
+            
+        return ascii_line
+
 
     def inside(line_index: int, row_index: int = -1, col_index: int = -1) -> str:
         """ Return inside line of hexagon in ASCII. 
-            lines_below_base is lines below top of this hexagon. """
+            lines_below_base is lines below top of this hexagon.
+        TODO:
+            Tidy this function up a bit and add comments - this function will be restructured when fill() is implemented
+        """
 
         def fill(line_index: int, row_index: int, col_index: int) -> str:
             pass
 
-        # lines_to_nearest_base = min(lines_from_top_base, Y_SCALE - )
-        lines_to_nearest_base = line_index     # !!!
-        if lines_to_nearest_base == Y_SCALE:
+        lines_to_nearest_base = min(line_index, 2 * Y_SCALE - line_index)
+
+        if line_index == Y_SCALE:
             position = get_position((row_index, col_index))
             if position:
-                tile_id = map_grid[row_index][col_index].ljust(3)
-                # print(tile_id)
+                tile_id = map_grid[*position].ljust(3)
             else:
                 tile_id = 3 * ' '
             return tile_id + (X_SCALE + 2 * (lines_to_nearest_base) - 3) * ' '
+            
         return (X_SCALE + 2 * (lines_to_nearest_base)) * ' '
 
 
-    def buffer(lines_to_nearest_base: int) -> str:
+    def buffer(line_index: int) -> str:
         """ Return line buffer to align hexagon bases in ASCII. """
+        lines_to_nearest_base = min(line_index, 2 * Y_SCALE - line_index)
         return (Y_SCALE - lines_to_nearest_base) * ' '
 
     @cache
     def share_count(neighbours: tuple[tuple[int, int], ...]) -> int:
         """ Return number of hexagons that share edges/vertices. """
-        # return sum(map(get_position, neighbours))
-        # print(len(neighbours), neighbours, end=': ')
-
         count = 0
         for position in neighbours:
-            if get_position(position):
-                count += 1
-                # print(position, end=' ')
-        # print(count)
+            count += bool(get_position(position))
         return count
 
     @cache
-    def get_position(position):
+    def get_position(position) -> TileID:
         x, y = position
         if not 0 <= x < rows or not 0 <= y < cols:
             return None
@@ -345,13 +283,13 @@ def grid_to_ascii(map_grid) -> str:
     rows, cols = map_grid.shape
 
     map_ascii = ""
-    for row_num in range(rows + 1):                         # account for final row in off-columns being lower
-        map_ascii += bases(row_num, 0)                      # on-column bases
+    for row_num in range(rows + 1):                         # account for lower final row in odd indexed columns
+        map_ascii += bases(row_num, 0)                      # 0 parity bases
         for line_index in range(1, Y_SCALE):
-            map_ascii += insides(row_num, line_index)      # insides
-        map_ascii += bases(row_num, Y_SCALE)                     # off-column bases
+            map_ascii += insides(row_num, line_index)       # 0 parity insides
+        map_ascii += bases(row_num, Y_SCALE)                # 1 parity bases
         for line_index in range(Y_SCALE + 1, 2 * Y_SCALE):
-            map_ascii += insides(row_num, line_index)     # insides
+            map_ascii += insides(row_num, line_index)       # 1 parity insides
 
     # !!! remember to pseudo-strip ascii_map
 
