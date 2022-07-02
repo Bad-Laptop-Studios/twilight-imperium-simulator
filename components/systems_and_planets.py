@@ -1,4 +1,6 @@
 SYSTEMS = {
+    "-1": {},
+    "0": {},
     "1": {
         "type": "green",
         "race": "The Federation of Sol",

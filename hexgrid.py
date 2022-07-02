@@ -1,4 +1,4 @@
-""" Module to manage hexagon and grid representations of the map. """
+""" Module for map support. Manages hexagon and grid representations of the map. """
 
 
 from functools import cache
@@ -40,11 +40,11 @@ def add(v1: tuple[int, ...], v2: tuple[int, ...]) -> tuple[int, ...]:
     """ Add tuples elementwise. """
     return map(sum, zip(v1, v2))
 
-def spiral_to_grid(map_spiral) -> np.array:
+def spiral_to_tile_grid(map_spiral) -> np.ndarray:
     """ Convert TTS string (tiles in a clockwise hexagonal spiral) to a grid for printing. """
     RING_MAX = spiral_length_to_rings(len(map_spiral))
     array_size = 2 * RING_MAX + 1
-    map_grid = np.full((array_size, array_size), "-1", dtype=object)
+    tile_grid = np.full((array_size, array_size), "-1", dtype=object)
 
     centre = array_size // 2
     origin = centre, centre
@@ -57,8 +57,8 @@ def spiral_to_grid(map_spiral) -> np.array:
     for tile_id in map_spiral:
         """ Put tile_id in grid. Then calculate values for next tile. """
         # print(f"ring:{ring}, arc:{arc}, side:{side}, pos:{x,y}, vector:{vector}, tile_id:{tile_id}, side_arc:{side_arc}")
-        # print(map_grid)
-        map_grid[x][y] = tile_id
+        # print(tile_grid)
+        tile_grid[x, y] = tile_id
 
         circumference = ring_to_circumference(ring)
         if arc >= circumference - 1 or ring == 0:       # -1 due to index from 0
@@ -85,11 +85,25 @@ def spiral_to_grid(map_spiral) -> np.array:
             x,y = add((x,y), vector)                        # go to next tile position
 
         arc += 1
-    # print(map_grid)
+    # print(tile_grid)
+    return tile_grid
+
+def tile_grid_to_map_grid(tile_grid: np.ndarray) -> np.ndarray:
+    """"""
+    shape = rows, cols = tile_grid.shape
+    # map_grid = np.full(*shape, "", dtype=object)      Python 3.11
+    map_grid = np.full((rows, cols), {}, dtype=object)
+
+    # for position, tile_id in np.ndenumerate(tile_grid):       Python 3.11
+    #     map_grid[*position] = SYSTEMS[tile_id]
+    for (row_index, col_index), tile_id in np.ndenumerate(tile_grid):
+        map_grid[row_index, col_index] = {"id": tile_id} | SYSTEMS[tile_id]
+    
     return map_grid
+    
 
 
-def grid_to_ascii(map_grid) -> str:
+def map_grid_to_ascii(map_grid) -> str:
     """
                                        ,-- base(0,0)
                                        v
@@ -167,10 +181,10 @@ def grid_to_ascii(map_grid) -> str:
         ascii_line = buffer(line_index) + corner(row_index, -parity, parity)
         # add a hexagon inside that advances by one column to align with the hexagon bases
         if parity:
-            ascii_line += inside(Y_SCALE, row_index, 0) + corner(row_index, 1, 0)
+            ascii_line += inside(row_index, 0, Y_SCALE) + corner(row_index, 1, 0)
         # add aligned columns in groups of two
         for col_index in range(parity, cols - 1, 2):
-            ascii_line += base(row_index, col_index) + corner(row_index, col_index, 1) + inside(Y_SCALE, row_index - 1 + parity, col_index + 1) + corner(row_index, col_index + 2, 0)
+            ascii_line += base(row_index, col_index) + corner(row_index, col_index, 1) + inside(row_index - 1 + parity, col_index + 1, Y_SCALE) + corner(row_index, col_index + 2, 0)
         # add a hexagon base that advances by one column to align with the hexagon insides
         if not parity:
             ascii_line += base(row_index, cols - 1) + corner(row_index, cols - 1, 1)
@@ -216,19 +230,19 @@ def grid_to_ascii(map_grid) -> str:
         ascii_line = buffer(line_index) + diagonal(row_index, -parity, parity)
         # add a lower hexagon half that advances by one column to align with the upper hexagon halves
         if parity:
-            ascii_line += inside(line_index, row_index, 0) + diagonal(row_index, 1, 0)
+            ascii_line += inside(row_index, 0, line_index) + diagonal(row_index, 1, 0)
         # add aligned columns in groups of two
         for col_index in range(parity, cols - 1, 2):
-            ascii_line += inside(lines_to_top_base, row_index, col_index) + diagonal(row_index, col_index, 1) + inside(lines_to_bottom_base, row_index - 1, col_index + 1) + diagonal(row_index, col_index + 2, 0)
+            ascii_line += inside(row_index, col_index, lines_to_top_base) + diagonal(row_index, col_index, 1) + inside(row_index - 1, col_index + 1, lines_to_bottom_base) + diagonal(row_index, col_index + 2, 0)
         # add an upper hexagon half that advances by one column to align with the lower hexagon halves
         if not parity:
-            ascii_line += inside(line_index, row_index, col_index) + diagonal(row_index, cols - 1, 1)
+            ascii_line += inside(row_index, col_index, line_index) + diagonal(row_index, cols - 1, 1)
         ascii_line += '\n'
             
         return ascii_line
 
 
-    def inside(line_index: int, row_index: int = -1, col_index: int = -1) -> str:
+    def inside(row_index: int, col_index: int, line_index: int) -> str:
         """ Return inside line of hexagon in ASCII. 
             lines_below_base is lines below top of this hexagon.
         TODO:
@@ -243,8 +257,8 @@ def grid_to_ascii(map_grid) -> str:
         if line_index == Y_SCALE:
             position = get_position((row_index, col_index))
             if position:
-                # tile_id = map_grid[*position].ljust(3)
-                tile_id = map_grid[row_index, col_index].ljust(3)
+                # tile_id = map_grid[*position]['id'].ljust(3)        Python 3.11
+                tile_id = map_grid[row_index, col_index]['id'].ljust(3)
             else:
                 tile_id = 3 * ' '
             return tile_id + (X_SCALE + 2 * (lines_to_nearest_base) - 3) * ' '
@@ -270,9 +284,9 @@ def grid_to_ascii(map_grid) -> str:
         x, y = position
         if not 0 <= x < rows or not 0 <= y < cols:
             return None
-        # value = map_grid[*position]
-        value = map_grid[x, y]
-        if value in ["-1", "0"]:
+        # value = map_grid[*position]['id']     Python 3.11
+        value = map_grid[x, y]['id']
+        if value in ['-1', '0']:
             return None
         return value
 
@@ -285,13 +299,13 @@ def grid_to_ascii(map_grid) -> str:
     rows, cols = map_grid.shape
 
     map_ascii = ""
-    for row_num in range(rows + 1):                         # account for lower final row in odd indexed columns
-        map_ascii += bases(row_num, 0)                      # 0 parity bases
+    for row_index in range(rows + 1):                           # account for lower final row in odd indexed columns
+        map_ascii += bases(row_index, 0)                        # 0 parity bases
         for line_index in range(1, Y_SCALE):
-            map_ascii += insides(row_num, line_index)       # 0 parity insides
-        map_ascii += bases(row_num, Y_SCALE)                # 1 parity bases
+            map_ascii += insides(row_index, line_index)         # 0 parity insides
+        map_ascii += bases(row_index, Y_SCALE)                  # 1 parity bases
         for line_index in range(Y_SCALE + 1, 2 * Y_SCALE):
-            map_ascii += insides(row_num, line_index)       # 1 parity insides
+            map_ascii += insides(row_index, line_index)         # 1 parity insides
 
     # !!! remember to pseudo-strip ascii_map
 
@@ -299,10 +313,9 @@ def grid_to_ascii(map_grid) -> str:
 
     
 
-map_grid = spiral_to_grid(MAP_LIST)
+tile_grid = spiral_to_tile_grid(MAP_LIST)
+print(tile_grid)
+map_grid = tile_grid_to_map_grid(tile_grid)
 print(map_grid)
-print(grid_to_ascii(map_grid))
-
-
-
-
+ascii_str = map_grid_to_ascii(map_grid)
+print(ascii_str)
