@@ -4,9 +4,12 @@
 from functools import cache
 from tkinter import Y
 from typing import Literal
+from xmlrpc.client import SYSTEM_ERROR
 import numpy as np
 from math import ceil, sqrt
 from components.systems_and_planets import SYSTEMS
+from asciiart import TILE_TEMPLATES, NO_TILE
+import textwrap
 
 TileID = str
 
@@ -16,7 +19,9 @@ MAP_STRING = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19"
 MAP_STRING = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37"
 MAP_STRING = "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61"
 # or you can use https://keeganw.github.io/ti4
-# MAP_STRING = "18 30 26 40 79 38 71 68 48 76 80 69 47 62 25 34 43 37 28 0 61 73 0 50 21 0 45 77 0 29 42 0 23 49 0 20 60"
+MAP_STRING = "18 30 26 40 79 38 71 68 48 76 80 69 47 62 25 34 43 37 28 0 61 73 0 50 21 0 45 77 0 29 42 0 23 49 0 20 60"
+MAP_STRING = "18 24 50 19 21 66 23 49 63 65 22 77 20 78 46 19 59 50 62"
+MAP_STRING = "18 28 77 36 63 30 66 35 23 27 32 31 20 37 29 34 50 38 49 0 19 48 0 69 21 0 75 46 0 65 47 0 33 22 0 76 78"
 MAP_LIST = MAP_STRING.split()
 
 def spiral_length_to_rings(spiral_length: int) -> int:
@@ -233,10 +238,10 @@ def map_grid_to_ascii(map_grid) -> str:
             ascii_line += inside(row_index, 0, line_index) + diagonal(row_index, 1, 0)
         # add aligned columns in groups of two
         for col_index in range(parity, cols - 1, 2):
-            ascii_line += inside(row_index, col_index, lines_to_top_base) + diagonal(row_index, col_index, 1) + inside(row_index - 1, col_index + 1, lines_to_bottom_base) + diagonal(row_index, col_index + 2, 0)
+            ascii_line += inside(row_index, col_index, lines_to_top_base) + diagonal(row_index, col_index, 1) + inside(row_index - (not parity), col_index + 1, lines_to_bottom_base) + diagonal(row_index, col_index + 2, 0)
         # add an upper hexagon half that advances by one column to align with the lower hexagon halves
         if not parity:
-            ascii_line += inside(row_index, col_index, line_index) + diagonal(row_index, cols - 1, 1)
+            ascii_line += inside(row_index, cols - 1, line_index) + diagonal(row_index, cols - 1, 1)
         ascii_line += '\n'
             
         return ascii_line
@@ -249,8 +254,13 @@ def map_grid_to_ascii(map_grid) -> str:
             Tidy this function up a bit and add comments - this function will be restructured when fill() is implemented
         """
 
-        def fill(line_index: int, row_index: int, col_index: int) -> str:
-            pass
+        # print(row_index, col_index)
+        tile_ascii = fill_system(row_index, col_index)
+        tile_lines = tile_ascii.split('\n')
+        # print(tile_lines)
+        # print(line_index)
+        return tile_lines[line_index - 1]
+
 
         lines_to_nearest_base = min(line_index, 2 * Y_SCALE - line_index)
 
@@ -280,18 +290,59 @@ def map_grid_to_ascii(map_grid) -> str:
         return count
 
     @cache
-    def get_position(position) -> TileID:
+    def get_position(position, default=None) -> TileID:
         x, y = position
         if not 0 <= x < rows or not 0 <= y < cols:
             return None
         # value = map_grid[*position]['id']     Python 3.11
         value = map_grid[x, y]['id']
         if value in ['-1', '0']:
-            return None
+            return default
         return value
 
+    @cache
+    def fill_system(row_index: int, col_index: int) -> str:
+        position = get_position((row_index, col_index))
+        if not position:
+            return NO_TILE
+        tile_info = map_grid[row_index, col_index]
+        tile_id = tile_info['id']
+        if tile_id in ['-1', '0']:
+            return NO_TILE
+        
+        tile_planets = tile_info['planets']
+        tile_ascii = TILE_TEMPLATES[X_SCALE, Y_SCALE][len(tile_planets)]
+
+        tile_ascii = tile_ascii.replace('id0', tile_id.ljust(3))
+
+        for planet_index, planet in enumerate(tile_planets):
+            id = str(planet_index)
+            # legendary status
+            legendary = ' ◐' if planet['legendary'] else '  '
+            tile_ascii = tile_ascii.replace('l' + id, legendary)
+            # technology specialty
+            specialty = {'biotic': 'G', 'cybernetic': 'Y', 'propulsion': 'B', 'warfare': 'R', None: ''}[planet['specialty']].rjust(2)
+            tile_ascii = tile_ascii.replace('s' + id, specialty)
+            # resources
+            resources = str(planet['resources']).rjust(2)
+            tile_ascii = tile_ascii.replace('r' + id, resources)
+            # influence
+            influence = str(planet['influence']).rjust(2)
+            tile_ascii = tile_ascii.replace('i' + id, influence)
+            # name and trait
+            # trait = f"({planet['trait'][0].upper()})"
+            trait = {'industrial': '(I)', 'hazardous': '(H)', 'cultural': '(C)', None: ''}[planet['trait']]
+            name = planet['name'] + ' ' + trait
+            name_lines = textwrap.TextWrapper(width=10).wrap(text=name)
+            name_lines.append("")                                                           # in case no wrapping occurs
+            tile_ascii = tile_ascii.replace('n' + id + 'a', name_lines[0].ljust(10))
+            tile_ascii = tile_ascii.replace('n' + id + 'b', name_lines[1].ljust(10))
+
+        print(tile_ascii)
+        return tile_ascii
+
     
-    SCALE = 1   # 2
+    SCALE = 3   # 2
     X_SCALE = [3, 6, 14, 15, 18, 21][SCALE]
     Y_SCALE = [2, 3,  6,  7,  8,  9][SCALE]
     # X_SCALE, Y_SCALE = 14, 6
@@ -309,6 +360,9 @@ def map_grid_to_ascii(map_grid) -> str:
 
     # !!! remember to pseudo-strip ascii_map
 
+
+    # print(fill_system(2, 1))
+    
     return map_ascii
 
     
