@@ -15,11 +15,11 @@ class Game():
     def __init__(self, players: int, map_string):
         self.players = []
         for i in range(players):
-            self.players.append(Player(i+1))
+            self.players.append(Player(i))
         
         self.map = Map()
         self.map.generate_map(map_string)
-        self.active_player = 0
+        self.active_player = None
         
     def start_game(self):
         while True:
@@ -28,7 +28,11 @@ class Game():
     def action_phase(self):
         # Add player order
         # Add checking for anomalies
+
+        # Add turn switching
         self.active_player = self.players[0]
+
+        
         print("1: Tactical Action")
         print("2: Strategic Action")
         print("3: Component Action")
@@ -43,6 +47,8 @@ class Game():
             print("Movement")
             # Choose starting system and system by system move
 
+            
+            # Add ability to break loop
             while True:
                 route = input("Input a series of systems to travel through: ")
                 route = route.split(' ')
@@ -99,7 +105,7 @@ class Game():
 
                     # Check if all units have required movement
                     stats = unit_type.get_stats()
-                    if stats[2] < len(route):
+                    if stats[2] < len(route)-1:
                         print(f"Selection: {selection} does not have high enough movement (has {stats[2]} needs {len(route)}). Thus they will be excluded from the movement.")
                         continue
 
@@ -143,10 +149,12 @@ class Game():
                 for unit_type in unit_selection:
                     # Move units from initial system to final
                     active_system.add_unit(unit_type, unit_selection[unit_type])
-                    inital_system.remove_unit(unit_type, unit_selection[unit_type])
+                    initial_system.remove_unit(unit_type, unit_selection[unit_type])
 
                 print("Movement complete")
-                        
+                self.map.print_map(WIDTH, HEIGHT)
+
+                
                     
 
 

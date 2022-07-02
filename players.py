@@ -16,6 +16,11 @@ class Player:
         self._commodities = 0
         self._commodity_bonus = 0
         self._trade_goods = 0
+
+
+        # Contains a Unit object for each type the player has access too
+        self.unit_types = []
+        self.assign_units()
         
         self.planets = []
         self.ships = []
@@ -34,6 +39,13 @@ class Player:
 
     def get_id(self) -> int:
         return self.id
+
+    def assign_units(self) -> None:
+        """
+        Place the Unit objects into self.unit_types
+        """
+
+        self.unit_types.append(Carrier(self.id))
 
 
     # ---------- Command Tokens ---------- #
