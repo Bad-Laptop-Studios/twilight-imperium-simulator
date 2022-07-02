@@ -2,9 +2,7 @@
 
 
 from functools import cache
-from tkinter import Y
 from typing import Literal
-from xmlrpc.client import SYSTEM_ERROR
 import numpy as np
 from math import ceil, sqrt
 from components.systems_and_planets import SYSTEMS
