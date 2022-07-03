@@ -125,9 +125,9 @@ class Fighter(Ship):
         return 'F'
 
 class Flagship(Ship):
-    def __init__(self, player: Player) -> None:
-        """ Retrieves the Flagship stats from the player's faction class. """
-        raise NotImplementedError
+##    def __init__(self, player: Player) -> None:
+##        """ Retrieves the Flagship stats from the player's faction class. """
+##        raise NotImplementedError
     def char(self) -> str:
         return 'f'
 

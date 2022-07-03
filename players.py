@@ -1,5 +1,5 @@
 from typing import *
-
+from components.units import *
 CommandPool = Literal['fleet', 'tactic', 'strategy']
 CommandSheet = dict[CommandPool, int]
 """ Dictionary of the 3 command pools. """
@@ -18,10 +18,6 @@ class Player:
         self._trade_goods = 0
 
 
-        # Contains a Unit object for each type the player has access too
-        self.unit_types = []
-        self.assign_units()
-        
         self.planets = []
         self.ships = []
 
@@ -30,8 +26,15 @@ class Player:
         self.id = id
         self._unit_upgrades = []
 
+        # Contains a Unit object for each type the player has access too
+        self.unit_types = []
+        self.assign_units()
+
     def select_strategy_card(self, card_number):
         self.strategy_card = card_number
+
+    def get_strategy_card(self):
+        return self.strategy_card
 
     def deactivate_systems(self):
         """ Remove all activated systems. """
