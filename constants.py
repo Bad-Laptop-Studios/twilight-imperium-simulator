@@ -2,8 +2,8 @@
 
 
 # actual game versions
-BASE      = False
-POK       = False
+BASE      = True
+POK       = True
 CODEX_I   = False
 CODEX_II  = False
 CODEX_III = False

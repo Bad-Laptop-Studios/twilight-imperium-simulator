@@ -6,7 +6,7 @@ from typing import Literal
 import numpy as np
 from math import ceil, sqrt
 from components.systems_and_planets import SYSTEMS
-from asciiart import TILE_TEMPLATES, NO_TILE
+from constants_ascii import *
 import textwrap
 
 TileID = str
