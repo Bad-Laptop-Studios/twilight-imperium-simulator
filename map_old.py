@@ -12,7 +12,12 @@ np.set_printoptions(threshold=np.inf)
 # 0 represents there being no tile
 DEFAULT_MAP = "41 71 62 67 75 38 47 40 37 25 27 50 72 66 78 68 74 39 60 32 0 44 23 30 0 59 61 0 26 79 0 21 63 73 0 20"
 
+
+
+
 class Map():
+    # Stores a hexagonal grid where each tile is a System
+    # Can print out the map
     def __init__(self):
         # Map 
         # self.map and self.adjacencies are two different stores for which tile is adjacent to which
@@ -58,9 +63,6 @@ class Map():
             id = map_string[position]
             if id != "0":
                 system = System(id, position)
-                # for testing purposes
-                system.add_unit(Carrier(0))
-
                 self.tiles.append(system)
 
                 # if tile is a wormhole store it for later

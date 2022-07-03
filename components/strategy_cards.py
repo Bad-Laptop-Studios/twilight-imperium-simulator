@@ -1,7 +1,8 @@
-from __future__ import *
+import sys
+#from __future__ import *
 from typing import *
-
-from manager import Player
+sys.path.insert(0, 'D:/Documents/GitHub/twilight-imperium-simulator')
+from players import *
 from controller import log_warning
 
 class StrategyCard():
@@ -13,6 +14,10 @@ class StrategyCard():
         self._id = self.ID
         self._name = self.__class__.__name__
         self._is_exhausted = False
+        self._trade_goods = 0
+
+    def get_name(self) -> str:
+        return self._name
 
     def get_primary_text(self) -> List[str]:
         return self.PRIMARY_TEXT
@@ -23,6 +28,15 @@ class StrategyCard():
         raise NotImplementedError
     def resolve_secondary(self):
         raise NotImplementedError
+
+    def increment_trade_goods(self):
+        self._trade_goods += 1
+
+    def reset_trade_goods(self):
+        self._trade_goods = 0
+
+    def get_trade_goods(self):
+        return self._trade_goods
 
     def exhaust(self) -> None:
         """ Exhaust strategy card. """
@@ -107,6 +121,7 @@ class Trade(StrategyCard):
     SECONDARY_TEXT = ["Spend 1 token from your strategy pool to replenish your commodities."]
 
     def __init__(self) -> None:
+        super().__init__()
         self._allowed_free_secondary: list[Player] = []
 
     def resolve_primary(self, player: Player, player_list: list[Player]):

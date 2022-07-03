@@ -28,16 +28,16 @@ class Unit:
     ABILITY_CODE_UPGRADE = ""   # for Infantry II
     UPGRADE_PREREQUISITES: TechnologyPrerequisites = dict()
 
-    def __init__(self, player: Player):
+    def __init__(self, player: int):
         # unit status
         self._is_sustained = False #: test
-        self._player = None
+        self._player = player
 
         self._type = ""
         self._carrying = []
         self._check_for_faction_specific_units(player)
 
-    def _check_for_faction_specific_units(self, player: Player) -> None:
+    def _check_for_faction_specific_units(self, player: int) -> None:
         """ If the player's faction has specific units, use them instead. """
         pass
 
@@ -125,9 +125,9 @@ class Fighter(Ship):
         return 'F'
 
 class Flagship(Ship):
-    def __init__(self, player: Player) -> None:
-        """ Retrieves the Flagship stats from the player's faction class. """
-        raise NotImplementedError
+##    def __init__(self, player: Player) -> None:
+##        """ Retrieves the Flagship stats from the player's faction class. """
+##        raise NotImplementedError
     def char(self) -> str:
         return 'f'
 

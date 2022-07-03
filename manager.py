@@ -10,25 +10,103 @@ from typing import *
 from components.units import *
 from players import *
 from constants import *
+from components.strategy_cards import *
 
 class Game():
     def __init__(self, players: int, map_string):
         self.players = []
         for i in range(players):
-            self.players.append(Player(i+1))
+            self.players.append(Player(i))
         
         self.map = Map()
         self.map.generate_map(map_string)
-        self.active_player = 0
+        self.active_player = None
+
+        self.strategy_cards = []
+        self.initialise_strategy_cards()
+
+        self.turn_order = []
+
+    def initialise_strategy_cards(self):
+        self.strategy_cards.append(Leadership())
+        self.strategy_cards.append(Diplomacy())
+        self.strategy_cards.append(Politics())
+        self.strategy_cards.append(Construction())
+        self.strategy_cards.append(Trade())
+        self.strategy_cards.append(Warfare())
+        self.strategy_cards.append(Technology())
+        self.strategy_cards.append(Imperial())
+            
+    def game_setup(self):
+        raise NotImplementedError
         
     def start_game(self):
         while True:
             raise NotImplementedError
 
+    def strategy_sort(self, player_id: int):
+        player = self.players[player_id]  
+        return player.get_strategy_card()
+        
+
+    def strategy_phase(self):
+        """
+        Players choose strategy cards and turn order is constructed
+        """
+        
+        # Print out strategy card descriptions
+        for i in range(len(self.strategy_cards)):
+            card = self.strategy_cards[i]
+            print(f"{i+1}: {card.get_name()}")
+            print("Primary Ability:")
+            for line in card.get_primary_text():
+                print('  - ' + line)
+                
+            print("Secondary Ability:")
+            for line in card.get_secondary_text():
+                print('  - ' + line)
+
+            print()
+
+        # Ask each player to select their strategy card
+        selected_cards = []
+        for i in range(len(self.players)):
+            while True:
+                player = self.players[i]
+                card_number = int(input(f"Player {i} select a strategy card: "))
+                if card_number > 8 or card_number < 1:
+                    print("Invalid selection. Please try again")
+                elif card_number in selected_cards:
+                    print("That card has already been selected. Please try again")
+                else:
+                    player.select_strategy_card(card_number)
+                    selected_cards.append(card_number)
+                    strategy_card = self.strategy_cards[card_number-1]
+                    # Add trade goods on card to player
+                    player.alter_trade_goods(strategy_card.get_trade_goods())
+                    strategy_card.reset_trade_goods()
+                    break
+
+        # Add trade goods to cards not selected
+        for card_number in range(1, 9):
+            if card_number not in selected_cards:
+                self.strategy_cards[card_number-1].increment_trade_goods()
+                
+
+        #Construct Turn Order
+        for i in range(len(self.players)): 
+            self.turn_order.append(i)
+        self.turn_order.sort(key=self.strategy_sort)
+        print(self.turn_order)
+
     def action_phase(self):
         # Add player order
         # Add checking for anomalies
+
+        # Add turn switching
         self.active_player = self.players[0]
+
+        
         print("1: Tactical Action")
         print("2: Strategic Action")
         print("3: Component Action")
@@ -43,6 +121,8 @@ class Game():
             print("Movement")
             # Choose starting system and system by system move
 
+            
+            # Add ability to break loop
             while True:
                 route = input("Input a series of systems to travel through: ")
                 route = route.split(' ')
@@ -99,7 +179,7 @@ class Game():
 
                     # Check if all units have required movement
                     stats = unit_type.get_stats()
-                    if stats[2] < len(route):
+                    if stats[2] < len(route)-1:
                         print(f"Selection: {selection} does not have high enough movement (has {stats[2]} needs {len(route)}). Thus they will be excluded from the movement.")
                         continue
 
@@ -143,10 +223,12 @@ class Game():
                 for unit_type in unit_selection:
                     # Move units from initial system to final
                     active_system.add_unit(unit_type, unit_selection[unit_type])
-                    inital_system.remove_unit(unit_type, unit_selection[unit_type])
+                    initial_system.remove_unit(unit_type, unit_selection[unit_type])
 
                 print("Movement complete")
-                        
+                self.map.print_map(WIDTH, HEIGHT)
+
+                
                     
 
 
@@ -207,7 +289,7 @@ class Game():
                 return active_system
                 
 
-game = Game(1, "37 71 42 64 24 59 39 75 60 31 29 26 61 79 46 38 78 67 35 28 62 77 45 34 36 27 70 68 73 72 30 47 74 65 76 49 0 20 32 0 44 40 0 43 66 0 22 50 0 33 23 0 63 80 0 25 48 0 21 19")
-game.action_phase()
+game = Game(4, "37 71 42 64 24 59 39 75 60 31 29 26 61 79 46 38 78 67 35 28 62 77 45 34 36 27 70 68 73 72 30 47 74 65 76 49 0 20 32 0 44 40 0 43 66 0 22 50 0 33 23 0 63 80 0 25 48 0 21 19")
+game.strategy_phase()
         
     
